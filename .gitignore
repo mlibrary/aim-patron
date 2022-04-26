@@ -2,3 +2,4 @@
 .bundle
 .cache
 coverage
+.byebug_history

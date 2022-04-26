@@ -1,0 +1,115 @@
+{
+    "associateddomain": [
+        "engin.umich.edu"
+    ],
+    "cn": [
+        "Emily Card",
+        "Emily O Card",
+        "Emily Card"
+    ],
+    "displayname": [
+        "Emily Card"
+    ],
+    "dn": [
+        "uid=emcard,ou=People,dc=umich,dc=edu"
+    ],
+    "donotpublish": [
+        "FALSE"
+    ],
+    "entityid": [
+        "99991111"
+    ],
+    "ferpa": [
+        "N"
+    ],
+    "gidnumber": [
+        "10"
+    ],
+    "givenname": [
+        "Emily"
+    ],
+    "homedirectory": [
+        "/users/emcard"
+    ],
+    "krbforeignprincipalname": [
+        "emcard@UMICH.EDU"
+    ],
+    "loginshell": [
+        "/bin/csh"
+    ],
+    "mail": [
+        "emcard@umich.edu"
+    ],
+    "mailforwardingaddress": [
+        "emcard@go.mail.umich.edu"
+    ],
+    "objectclass": [
+        "inetOrgPerson",
+        "posixAccount",
+        "umichPerson",
+        "krbForeignPrincipalAux",
+        "posixGroup",
+        "organizationalPerson",
+        "person",
+        "ndsLoginProperties",
+        "top",
+        "DirXML-EntitlementRecipient",
+        "DirXML-PasswordSyncStatusUser"
+    ],
+    "ou": [
+        "Alumni",
+        "Library Info Tech - AIM - Faculty and Staff",
+        "University Library - Faculty and Staff"
+    ],
+    "realtimeblocklist": [
+        "TRUE"
+    ],
+    "sn": [
+        "Rio"
+    ],
+    "telephonenumber": [
+        "734-999-9999"
+    ],
+    "uid": [
+        "emcard"
+    ],
+    "uidnumber": [
+        "111111"
+    ],
+    "umichalumstatus": [
+        "{campus=UM_ANN-ARBOR}:{degSchool=College of Engineering}:{classYr=2009}"
+    ],
+    "umichdirectoryid": [
+        "039-0909-20080606191545212-129"
+    ],
+    "umichdisplaysn": [
+        "Card"
+    ],
+    "umichhomepostaladdressdata": [
+        "{addr1=1111 Pear Street}:{city=Ann Arbor}:{state=MI}:{postal=48105}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichhr": [
+        "{jobCategory=Staff}:{campus=UM_ANN-ARBOR}:{deptId=470430}:{deptGroup=UNIV_LIBRARY}:{deptDescription=Library Info Tech - AIM}:{deptGroupDescription=University Library}:{deptVPArea=PRVST_EXC_VP_ACA_AFF}:{jobcode=101904}:{jobFamily=210}:{emplStatus=A}:{regTemp=R}:{supervisorId=99999}:{tenureStatus=NA}:{jobIndicator=P}"
+    ],
+    "umichinstroles": [
+        "AlumniAA",
+        "RegularStaffAA"
+    ],
+    "umichnameofrecord": [
+        "Emily Card"
+    ],
+    "umichpermanentpostaladdressdata": [
+        "{addr1=1111 Pear Trail}:{city=Ann Arbor}:{state=MI}:{postal=48105}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichpostaladdress": [
+        "Library Info Tech - AIM $ 300 Hatcher North $ Ann Arbor MI 48109-1190"
+    ],
+    "umichpostaladdressdata": [
+        "{addr1=Library Info Tech - AIM}:{addr2=300 Hatcher North}:{city=Ann Arbor}:{state=MI}:{postal=48109-1190}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichserviceentitlement": [
+    ],
+    "umichtitle": [
+        "App Programmer/Analyst Sr"
+    ]
+}

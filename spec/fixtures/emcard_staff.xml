@@ -1,0 +1,79 @@
+<user>
+  <record_type>PUBLIC</record_type>
+  <external_id>SIS</external_id>
+  <primary_id>emcard</primary_id>
+  <first_name>Emily</first_name>
+  <last_name>Card</last_name>
+  <campus_code>UMAA</campus_code>
+  <user_group>02</user_group>
+  <status>ACTIVE</status>
+  <status_date>2022-04-24</status_date>
+  <expiry_date>2022-08-26</expiry_date>
+  <purge_date>2024-08-26</purge_date>
+  <job_description>Library Info Tech - AIM (470430)</job_description>
+  <user_statistics>
+    <user_statistic>
+      <statistic_category>ST</statistic_category>
+    </user_statistic>
+  </user_statistics>
+  <user_roles>
+    <user_role>
+      <status>ACTIVE</status>
+      <scope>01UMICH_INST</scope>
+      <role_type>200</role_type>
+    </user_role>
+  </user_roles>
+  <contact_info>
+    <addresses>
+      <address preferred="true">
+        <line1>Library Info Tech - AIM</line1>
+        <line2>300 Hatcher North</line2>
+        <city>Ann Arbor</city>
+        <country>UNITED STATES</country>
+        <postal_code>48109-1190</postal_code>
+        <state_province>MI</state_province>
+        <address_types>
+          <address_type>work</address_type>
+        </address_types>
+      </address>
+      <address preferred="false">
+        <line1>1111 Pear Street</line1>
+        <city>Ann Arbor</city>
+        <country>UNITED STATES</country>
+        <postal_code>48105</postal_code>
+        <state_province>MI</state_province>
+        <address_types>
+          <address_type>home</address_type>
+        </address_types>
+      </address>
+    </addresses>
+    <emails>
+      <email preferred="true">
+        <email_address>emcard@umich.edu</email_address>
+        <email_types>
+          <email_type>work</email_type>
+        </email_types>
+      </email>
+    </emails>
+    <phones>
+      <phone preferred="true">
+        <phone_number>734-999-9999</phone_number>
+        <phone_types>
+          <phone_type>home</phone_type>
+        </phone_types>
+      </phone>
+    </phones>
+  </contact_info>
+  <user_identifiers>
+    <user_identifier>
+      <id_type>02</id_type>
+      <value>99991111</value>
+      <status>Active</status>
+    </user_identifier>
+    <user_identifier>
+      <id_type>05</id_type>
+      <value>emcard@umich.edu</value>
+      <status>Active</status>
+    </user_identifier>
+  </user_identifiers>
+</user>
