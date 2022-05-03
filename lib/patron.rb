@@ -6,4 +6,18 @@ class Patron
   def uniqname
     @data["uid"]&.first
   end
+
+  def primary_id
+    @data["uid"]&.first
+  end
+
+  def last_name
+    @data["umichdisplaysn"]&.first
+  end
+
+  def first_name
+    @data["givenname"]&.first
+  end
+  
+  
 end
