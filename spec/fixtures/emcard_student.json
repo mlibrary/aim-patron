@@ -1,0 +1,110 @@
+{
+    "cn": [
+        "Emily Card"
+    ],
+    "displayname": [
+        "Emily Card"
+    ],
+    "dn": [
+        "uid=emcard,ou=People,dc=umich,dc=edu"
+    ],
+    "entityid": [
+        "12345678"
+    ],
+    "ferpa": [
+        "N"
+    ],
+    "gidnumber": [
+        "10"
+    ],
+    "givenname": [
+        "Emily"
+    ],
+    "homedirectory": [
+        "/users/emcard"
+    ],
+    "krbforeignprincipalname": [
+        "emcard@UMICH.EDU"
+    ],
+    "loginshell": [
+        "/bin/csh"
+    ],
+    "mail": [
+        "emcard@umich.edu"
+    ],
+    "mailforwardingaddress": [
+        "emcard@go.mail.umich.edu"
+    ],
+    "objectclass": [
+        "inetOrgPerson",
+        "umichPerson",
+        "krbForeignPrincipalAux",
+        "posixAccount",
+        "umichRole",
+        "DirXML-ApplicationAttrs",
+        "organizationalPerson",
+        "person",
+        "ndsLoginProperties",
+        "top",
+        "DirXML-EntitlementRecipient",
+        "DirXML-PasswordSyncStatusUser"
+    ],
+    "ou": [
+        "Undergraduate Engineering - Student",
+        "Mechanical Engineering BSE - Student"
+    ],
+    "realtimeblocklist": [
+        "TRUE"
+    ],
+    "sn": [
+        "Card"
+    ],
+    "uid": [
+        "emcard"
+    ],
+    "uidnumber": [
+        "12345678"
+    ],
+    "umichaaacadprogram": [
+        "{acadCareer=UENG}:{acadProg=00007}:{acadPlan=5130BSE}:{campus=A}:{progStatus=AC}:{admitTerm=2370}:{admitTermBegDt=2022-01-05}:{expGradTerm=2420}:{degrChkoutStat=}:{acadCareerDescr=Undergraduate Engineering}:{acadPlanDegree=BSJ}:{acadPlanDescr=Mechanical Engineering BSE}:{acadPlanField=5130}:{acadPlanFieldDescr=}:{acadPlanType=MAJ}:{acadPlanTypeDescr=Major}:{acadGroup=ENG}:{acadGroupDescr=Engineering}:{acadProgDescr=Engineering UG Degree}"
+    ],
+    "umichaacurrenttermstatus": [
+        "{acadCareer=UENG}:{termCode=2390}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-05-03}:{termEndDt=2022-08-16}:{regStatus=NRGS}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Spring/Summer 2022}:{acadYear=2022}",
+        "{acadCareer=UENG}:{termCode=2380}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-05-03}:{termEndDt=2022-06-20}:{regStatus=RGSD}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Spring 2022}:{acadYear=2022}"
+    ],
+    "umichaatermstatus": [
+        "{acadCareer=UENG}:{termCode=2390}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-05-03}:{termEndDt=2022-08-16}:{regStatus=NRGS}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Spring/Summer 2022}:{acadYear=2022}",
+        "{acadCareer=UENG}:{termCode=2400}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-06-29}:{termEndDt=2022-08-16}:{regStatus=NRGS}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Summer 2022}:{acadYear=2023}",
+        "{acadCareer=UENG}:{termCode=2410}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-08-29}:{termEndDt=2022-12-09}:{regStatus=RGSD}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Fall 2022}:{acadYear=2023}",
+        "{acadCareer=UENG}:{termCode=2380}:{acadLevelProj=14}:{acadLevelDescription=Senior}:{formOfStudy=ENRL}:{termBeginDt=2022-05-03}:{termEndDt=2022-06-20}:{regStatus=RGSD}:{acadCareerDescr=Undergraduate Engineering}:{termDescr=Spring 2022}:{acadYear=2022}"
+    ],
+    "umichdirectoryid": [
+        "umichdirectoryid"
+    ],
+    "umichdisplaysn": [
+        "Card"
+    ],
+    "umichhomepostaladdressdata": [
+        "{addr1=1111 Island Drive Court apt #101}:{city=Ann Arbor}:{state=MI}:{postal=48105}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichinstroles": [
+        "StudentAA",
+        "EnrolledStudentAA"
+    ],
+    "umichnameofrecord": [
+        "Emily Card"
+    ],
+    "umichpermanentpostaladdressdata": [
+        "{addr1=1111 Island Drive Court apt #101}:{city=Ann Arbor}:{state=MI}:{postal=48105}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichserviceentitlement": [
+        "{\"system\":\"box\",\"changeDate\":\"20211101204204Z\",\"foreignKey\":\"\",\"eligibility\":\"yesDelay\",\"status\":\"\",\"action\":\"\"}",
+        "{\"system\":\"dropbox\",\"changeDate\":\"20211101204204Z\",\"foreignKey\":\"\",\"eligibility\":\"yesDelay\",\"status\":\"\",\"action\":\"\"}",
+        "{\"system\":\"linkedinlearning\",\"changeDate\":\"20211101204204Z\",\"foreignKey\":\"\",\"eligibility\":\"yesDelay\",\"status\":\"\",\"action\":\"\"}",
+        "{\"system\":\"adobecc\",\"changeDate\":\"20211101204204Z\",\"foreignKey\":\"\",\"eligibility\":\"cc\",\"status\":\"\",\"action\":\"\"}",
+        "{\"system\":\"canvas\",\"changeDate\":\"20211101204206Z\",\"foreignKey\":\"\",\"eligibility\":\"yesImmed\",\"status\":\"active\",\"action\":\"\"}",
+        "{\"system\":\"papercut\",\"changeDate\":\"20211101204207Z\",\"foreignKey\":\"\",\"eligibility\":\"yesDelay\",\"status\":\"role\",\"action\":\"\"}",
+        "{\"system\":\"tdx\",\"changeDate\":\"20211101204210Z\",\"foreignKey\":\"\",\"eligibility\":\"yes\",\"status\":\"active\",\"action\":\"\"}",
+        "{\"system\":\"enterprise\",\"changeDate\":\"20211101204504Z\",\"eligibility\":\"yesDelay\",\"status\":\"active\",\"action\":\"\"}"
+    ]
+}
