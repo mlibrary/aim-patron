@@ -11,7 +11,7 @@ describe Patron do
   end
   it "returns external_id" do
     # this is static
-    expect(subject.record_type).to eq("SIS")
+    expect(subject.external_id).to eq("SIS")
   end
   it "returns a primary_id" do
     expect(subject.primary_id).to eq("emcard")

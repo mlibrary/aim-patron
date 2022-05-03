@@ -19,5 +19,12 @@ class Patron
     @data["givenname"]&.first
   end
   
+  def record_type
+    "PUBLIC"
+  end
+
+  def external_id
+    "SIS"
+  end
   
 end
