@@ -14,29 +14,29 @@ SponsoredAffiliateAA:
   role: student
   campus: UMAA
 FacultyFLNT:
+  role: faculty
+  campus: UMFL
+RegularStaffFLNT:
+  role: student
+  campus: UMFL
+  EnrolledStudentFLNT:
+  role: student
+  campus: UMFL
+StudentFLNT:
+  role: student
+  campus: UMFL
+FacultyDBRN:
+  role: student
+  campus: UMDB
+RegularStaffDBRN:
+  role: student
+  campus: UMDB
+EnrolledStudentDBRN:
+  role: student
+  campus: UMDB
+TemporaryStaffAA:
   role: student
   campus: UMAA
-  RegularStaffFLNT:
-  role: student
-  campus: UMAA
-EnrolledStudentFLNT
-  role: student
-  campus: UMAA
-StudentFLNT
-  role: student
-  campus: UMAA
-FacultyDBRN
-  role: student
-  campus: UMAA
-RegularStaffDBRN
-  role: student
-  campus: UMAA
-EnrolledStudentDBRN
-  role: student
-  campus: UMAA
-TemporaryStaffAA
-  role: student
-  campus: UMAA
-Retiree
+Retiree:
   role: student
   campus: UMAA
