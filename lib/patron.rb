@@ -18,7 +18,7 @@ class Patron
   def first_name
     @data["givenname"]&.first
   end
-  
+
   def record_type
     "PUBLIC"
   end
