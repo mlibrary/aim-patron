@@ -1,0 +1,104 @@
+{
+    "associateddomain": [
+        "umflint.edu"
+    ],
+    "cn": [
+        "Emily Card"
+    ],
+    "displayname": [
+        "Emily Card"
+    ],
+    "dn": [
+        "uid=emcard,ou=People,dc=umich,dc=edu"
+    ],
+    "entityid": [
+        "78297764"
+    ],
+    "ferpa": [
+        "N"
+    ],
+    "gidnumber": [
+        "10"
+    ],
+    "givenname": [
+        "Emily"
+    ],
+    "homedirectory": [
+        "/users/emcard"
+    ],
+    "krbforeignprincipalname": [
+        "emcard@UMICH.EDU"
+    ],
+    "loginshell": [
+        "/bin/csh"
+    ],
+    "mail": [
+        "emcard@umich.edu"
+    ],
+    "mailforwardingaddress": [
+        "emcard@go.mail.umich.edu"
+    ],
+    "objectclass": [
+        "inetOrgPerson",
+        "rfc822MailGroup",
+        "umichPerson",
+        "krbForeignPrincipalAux",
+        "umichGroup",
+        "umichRole",
+        "posixAccount",
+        "organizationalPerson",
+        "person",
+        "ndsLoginProperties",
+        "top",
+        "DirXML-EntitlementRecipient",
+        "DirXML-PasswordSyncStatusUser",
+        "DirXML-ApplicationAttrs"
+    ],
+    "ou": [
+        "School of Management - Student",
+        "Business Administration - Student",
+        "Leadership & Org Dynamics - Student"
+    ],
+    "realtimeblocklist": [
+        "TRUE"
+    ],
+    "sn": [
+        "Card"
+    ],
+    "uid": [
+        "emcard"
+    ],
+    "uidnumber": [
+        "99445750"
+    ],
+    "umichdirectoryid": [
+        "039-0909-20131029075313317-587"
+    ],
+    "umichdisplaymiddle": [
+        ""
+    ],
+    "umichdisplaysn": [
+        "Card"
+    ],
+    "umichflntcurrenttermstatus": [
+        "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}"
+    ],
+    "umichflnttermstatus": [
+        "{academicYear=2022}:{academicPeriod=202220}:{academicPeriodDesc=Winter 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MBA}:{degreeDesc=Master Business Admin}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=BUS}:{majorDesc=Business Administration}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202120}:{lastEnrolledTerm=202220}",
+        "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}",
+        "{academicYear=2022}:{academicPeriod=202240}:{academicPeriodDesc=Summer 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}",
+        "{academicYear=2023}:{academicPeriod=202310}:{academicPeriodDesc=Fall 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202230}:{lastEnrolledTerm=202220}"
+    ],
+    "umichhomepostaladdressdata": [
+        "{addr1=9999 Squirrel St}:{city=Detroit}:{state=MI}:{postal=48219-1169}:{nation=UNITED STATES}:{nationCode=USA}"
+    ],
+    "umichinstroles": [
+        "StudentFLNT"
+    ],
+    "umichnameofrecord": [
+        "Emily Card"
+    ],
+    "umichserviceentitlement": [
+        "{\"system\":\"enterprise\",\"changeDate\":\"20211229085531Z\",\"eligibility\":\"yesDelay\",\"status\":\"active\",\"action\":\"\"}"
+    ]
+}

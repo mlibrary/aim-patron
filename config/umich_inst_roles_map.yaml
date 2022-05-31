@@ -1,0 +1,42 @@
+FacultyAA:
+  role: faculty
+  campus: UMAA
+RegularStaffAA:
+  role: staff
+  campus: UMAA
+EnrolledStudentStudentAA:
+  role: student
+  campus: UMAA
+StudentAA:
+  role: student
+  campus: UMAA
+SponsoredAffiliateAA:
+  role: student
+  campus: UMAA
+FacultyFLNT:
+  role: student
+  campus: UMAA
+  RegularStaffFLNT:
+  role: student
+  campus: UMAA
+EnrolledStudentFLNT
+  role: student
+  campus: UMAA
+StudentFLNT
+  role: student
+  campus: UMAA
+FacultyDBRN
+  role: student
+  campus: UMAA
+RegularStaffDBRN
+  role: student
+  campus: UMAA
+EnrolledStudentDBRN
+  role: student
+  campus: UMAA
+TemporaryStaffAA
+  role: student
+  campus: UMAA
+Retiree
+  role: student
+  campus: UMAA

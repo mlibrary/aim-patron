@@ -26,5 +26,4 @@ class Patron
   def external_id
     "SIS"
   end
-  
 end
