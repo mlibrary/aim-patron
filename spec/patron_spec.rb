@@ -3,7 +3,7 @@ describe Patron do
     @patron = JSON.parse(File.read("./spec/fixtures/emcard_staff.json"))
   end
   subject do
-    described_class.new(@patron)
+    described_class.new(data: @patron)
   end
   it "returns record_type" do
     # this is static
