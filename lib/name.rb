@@ -1,8 +1,9 @@
 class Name
   def initialize(data)
-    @givenName = data["givenname"]&.first
-    @umichdisplaysn = data["umichdisplaysn"] 
-    @umichDisplayMiddle = data["umichdisplaymiddle"] 
+    @given_name = data["givenname"]&.first
+    @umich_display_sn = data["umichdisplaysn"] 
+    @umich_display_middle = data["umichdisplaymiddle"] 
+    @display_name = data["displayname"]
   end
 
   def first_name
@@ -10,5 +11,8 @@ class Name
   def middle_name
   end
   def last_name
+  end
+  def middle_name?
+    !!middle_name
   end
 end
