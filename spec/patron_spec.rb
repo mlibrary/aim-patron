@@ -29,17 +29,17 @@ describe Patron do
   it "returns true if a middle name exists" do
     expect(subject.middle_name?).to eq(true)
   end
-  it "returns a campus_code" do
-    expect(subject.campus_code).to eq("UMAA")
+  it "returns not implemented error for campus_code" do
+    expect { subject.campus_code }.to raise_error(NotImplementedError)
   end
-  xit "returns a user_group" do
-    expect(subject.user_group).to eq("02")
+  it "returns not implemented error for user_group" do
+    expect { subject.campus_code }.to raise_error(NotImplementedError)
   end
   it "returns a status_date"
   it "returns an expiry_date"
   it "returns a purge_date"
-  it "returns a job_description" do
-    expect(subject.job_description).to eq("Library Info Tech - AIM (470430)")
+  it "returns not implemented error for job_description" do
+    expect { subject.job_description }.to raise_error(NotImplementedError)
   end
   it "returns statistic_category"
   context "#base_inst_role" do

@@ -42,20 +42,26 @@ class Patron
   end
 
   def campus_code
-    # can someone have multiple campus codes? can there be faculty at Flint and student in Ann Arbor?
-    base_inst_role["campus"]
+    raise NotImplementedError
+  end
+
+  def user_group
+    raise NotImplementedError
+  end
+
+  def status
+    "ACTIVE"
   end
 
   def job_description
-    @data["umichhr"].map do |x|
-      h = x.split(":").map do |y|
-        y.gsub(/[{}]/, "").split("=")
-      end.to_h
-      "#{h["deptDescription"]} (#{h["deptId"]})"
-    end.first
+    raise NotImplementedError
   end
 
   # private?
+  def role
+    base_inst_role["role"]
+  end
+
   def base_inst_role
     self.class.base_inst_role(@data)
   end

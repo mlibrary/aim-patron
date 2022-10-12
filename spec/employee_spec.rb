@@ -13,6 +13,9 @@ describe Employee do
       expect(subject.base_inst_role["campus"]).to eq("UMAA")
     end
   end
+  it "returns a job_description" do
+    expect(subject.job_description).to eq("Library Info Tech - AIM (470430)")
+  end
   context "#hr_data" do
     it "returns appropriate object for staff" do
       expect(subject.hr_data.jobCategory).to eq("Staff")
