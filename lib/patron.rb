@@ -1,8 +1,27 @@
-require_relative "./name"
+require "forwardable"
 class Patron
+  INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
+
+  def self.base_inst_role(data)
+    INST_ROLE_MAP.filter_map do |inst_role|
+      inst_role if data["umichinstroles"].any? { |x| x == inst_role["key"] }
+    end.first
+  end
+
+  def self.for(data)
+    case base_inst_role(data)&.dig("role")
+    when "student"
+      Student.new(data: data)
+    else
+      Employee.new(data: data)
+    end
+  end
+
+  extend Forwardable
+  def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
+
   def initialize(data:, name: Name.new(data))
     @data = data
-    @inst_role_map = YAML.load_file("./config/umich_inst_roles_map.yaml")
     @name = name
   end
 
@@ -12,14 +31,6 @@ class Patron
 
   def primary_id
     @data["uid"]&.first
-  end
-
-  def last_name
-    @data["umichdisplaysn"]&.first
-  end
-
-  def first_name
-    @data["givenname"]&.first
   end
 
   def record_type
@@ -32,7 +43,7 @@ class Patron
 
   def campus_code
     # can someone have multiple campus codes? can there be faculty at Flint and student in Ann Arbor?
-    @data["umichinstroles"].filter_map { |x| @inst_role_map[x]["campus"] unless @inst_role_map[x].nil? }.first
+    base_inst_role["campus"]
   end
 
   def job_description
@@ -42,5 +53,18 @@ class Patron
       end.to_h
       "#{h["deptDescription"]} (#{h["deptId"]})"
     end.first
+  end
+
+  # private?
+  def base_inst_role
+    self.class.base_inst_role(@data)
+  end
+
+  def ldap_fields(array)
+    array.map do |row|
+      OpenStruct.new(row.split(":").map do |element|
+        element.gsub(/["{}]/, "").split("=")
+      end.to_h)
+    end
   end
 end

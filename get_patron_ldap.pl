@@ -984,6 +984,7 @@ sub getHRdata {
   my $attr = shift;
 
   my $hr_list = $entry->get_value($attr, asref => 1);
+  #mrio 2022-10-12 "this block hasn't ever executed since January 2022; don't have data earlier than that"
   $hr_list or do { # no hr data for supplied attr: if it's faculty, check for sponsoredaffiliate role
     $info->{all_roles} =~ /sponsoredaffiliate/ and do {
       $hr_list = $entry->get_value('umichSponsorshipDetail', asref => 1);

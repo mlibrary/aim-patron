@@ -8,22 +8,22 @@ describe Name do
   xcontext "givenname, middle, and last name" do
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("Emily") 
+        expect(subject.first_name).to eq("Emily")
       end
     end
     context "#middle_name" do
       it "is a string" do
-        expect(subject.middle_name).to eq("O") 
+        expect(subject.middle_name).to eq("O")
       end
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is true" do 
-        expect(subject.middle_name?).to eq(true) 
+      it "is true" do
+        expect(subject.middle_name?).to eq(true)
       end
     end
   end
@@ -33,22 +33,22 @@ describe Name do
     end
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("Emily") 
+        expect(subject.first_name).to eq("Emily")
       end
     end
     context "#middle_name" do
       it "is a string" do
-        expect(subject.middle_name).to eq("O") 
+        expect(subject.middle_name).to eq("O")
       end
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is true" do 
-        expect(subject.middle_name?).to eq(true) 
+      it "is true" do
+        expect(subject.middle_name?).to eq(true)
       end
     end
   end
@@ -59,22 +59,22 @@ describe Name do
     end
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("EmilyGivenName") 
+        expect(subject.first_name).to eq("EmilyGivenName")
       end
     end
     context "#middle_name" do
       it "is a string" do
-        expect(subject.middle_name).to eq("O") 
+        expect(subject.middle_name).to eq("O")
       end
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is true" do 
-        expect(subject.middle_name?).to eq(true) 
+      it "is true" do
+        expect(subject.middle_name?).to eq(true)
       end
     end
   end
@@ -85,22 +85,22 @@ describe Name do
     end
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("Emily") 
+        expect(subject.first_name).to eq("Emily")
       end
     end
     context "#middle_name" do
       it "is a string" do
-        expect(subject.middle_name).to eq("O") 
+        expect(subject.middle_name).to eq("O")
       end
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is true" do 
-        expect(subject.middle_name?).to eq(true) 
+      it "is true" do
+        expect(subject.middle_name?).to eq(true)
       end
     end
   end
@@ -111,22 +111,22 @@ describe Name do
     end
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("Emily") 
+        expect(subject.first_name).to eq("Emily")
       end
     end
     context "#middle_name" do
       it "is a string" do
-        expect(subject.middle_name).to eq("O") 
+        expect(subject.middle_name).to eq("O")
       end
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is true" do 
-        expect(subject.middle_name?).to eq(true) 
+      it "is true" do
+        expect(subject.middle_name?).to eq(true)
       end
     end
   end
@@ -136,7 +136,7 @@ describe Name do
     end
     context "#first_name" do
       it "is a string" do
-        expect(subject.first_name).to eq("Emily") 
+        expect(subject.first_name).to eq("Emily")
       end
     end
     context "#middle_name" do
@@ -146,12 +146,12 @@ describe Name do
     end
     context "#last_name" do
       it "is a string" do
-        expect(subject.last_name).to eq("Card") 
+        expect(subject.last_name).to eq("Card")
       end
     end
     context "#middle_name?" do
-      it "is false" do 
-        expect(subject.middle_name?).to eq(false) 
+      it "is false" do
+        expect(subject.middle_name?).to eq(false)
       end
     end
   end

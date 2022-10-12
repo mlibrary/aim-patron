@@ -105,6 +105,7 @@ end
 def fixture(path)
   File.read("./spec/fixtures/#{path}")
 end
+
 def json_fixture(path)
   JSON.parse(fixture(path))
 end
