@@ -28,26 +28,41 @@ class Employee < Patron
     "#{hr_data.deptDescription} (#{hr_data.deptId})"
   end
 
-  def hr_data
+  def email_type
+    "work"
+  end
+
+  def umich_address_type
+    "work"
+  end
+
+  def hr_list
     hr = role == "sponsored_affiliate" ? @data["umichsponsorshipdetail"] : @data["umichhr"]
     raise if hr.nil? # there always has to be hrdata
-    hr_list = ldap_fields(hr)
+    ldap_fields(hr)
+  end
 
-    filtered = hr_list.filter do |x|
-      case role
-      when "faculty"
-        x.jobCategory == "Faculty"
-      when "staff"
-        x.jobCategory == "Staff" && x.regTemp == "R"
-      when "temporary_staff"
-        x.jobCategory == "Staff" && x.regTemp == "T"
-      when "sponsored_affiliate"
-        true
-      when "retiree"
-        x.jobCategory == "Faculty"
-      end
+  def hr_criteria(hr_item)
+    case role
+    when "faculty"
+      hr_item.jobCategory == "Faculty"
+    when "temporary_staff"
+      hr_item.jobCategory == "Staff" && hr_item.regTemp == "T"
+    when "sponsored_affiliate"
+      true
+    when "retiree"
+      hr_item.jobCategory == "Faculty"
     end
-    library_job = filtered.find { |x| x.deptId =~ /^47/ }
-    library_job || filtered.first
+  end
+
+  def hr_filtered
+    hr_list.filter do |hr_item|
+      hr_criteria(hr_item)
+    end
+  end
+
+  def hr_data
+    library_job = hr_filtered.find { |x| x.deptId =~ /^47/ }
+    library_job || hr_filtered.first
   end
 end

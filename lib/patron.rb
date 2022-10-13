@@ -12,6 +12,8 @@ class Patron
     case base_inst_role(data)&.dig("role")
     when "student"
       Student.new(data: data)
+    when "staff"
+      StaffPerson.new(data: data)
     else
       Employee.new(data: data)
     end
@@ -57,6 +59,54 @@ class Patron
     raise NotImplementedError
   end
 
+  def stastic_category
+    raise NotImplementedError
+  end
+
+  def email_address
+    @data["mail"]&.first
+  end
+
+  def email_type
+    raise NotImplementedError
+  end
+
+  def umich_address_type
+    raise NotImplementedError
+  end
+
+  def umich_address
+    raw_address = [@data["umichpostaladdressdata"]&.first, @data["umichhomepostaladdressdata"]&.first].compact.first
+    return if raw_address.nil?
+    address = ldap_field(raw_address)
+    address.type = umich_address_type
+    Address.new(address)
+  end
+
+  def permanent_address
+    raw_address = [@data["umichpermanentpostaladdressdata"]&.first, @data["umichhomepostaladdressdata"]&.first].compact.first
+    return if raw_address.nil?
+    address = ldap_field(raw_address)
+    address.type = "home"
+    Address.new(address)
+  end
+
+  def addresses
+    [umich_address, permanent_address].compact.map.with_index do |address, index|
+      if index == 0
+        raw = address.raw
+        raw.preferred = true
+        Address.new(raw)
+      else
+        address
+      end
+    end
+  end
+
+  def phone_number
+    # to be implemented
+  end
+
   # private?
   def role
     base_inst_role["role"]
@@ -68,9 +118,47 @@ class Patron
 
   def ldap_fields(array)
     array.map do |row|
-      OpenStruct.new(row.split(":").map do |element|
-        element.gsub(/["{}]/, "").split("=")
-      end.to_h)
+      ldap_field(row)
+    end
+  end
+
+  def ldap_field(row)
+    OpenStruct.new(row.split(":").map do |element|
+      element.gsub(/["{}]/, "").split("=")
+    end.to_h)
+  end
+
+  class Address
+    attr_reader :raw
+    def initialize(address)
+      @raw = address
+    end
+
+    def line1
+      @raw.addr1 || "(no address)"
+    end
+
+    def line2
+    end
+
+    def city
+    end
+
+    def state_province
+    end
+
+    def postal_code
+    end
+
+    def country
+    end
+
+    def type
+      @raw.type
+    end
+
+    def preferred
+      @raw.preferred || false
     end
   end
 end

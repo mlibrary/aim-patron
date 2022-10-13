@@ -3,6 +3,7 @@ require "yaml"
 require_relative "./name"
 require_relative "./patron"
 require_relative "./employee"
+require_relative "./staff_person"
 require_relative "./student"
 class ProcessLdap
   def to_s
