@@ -126,7 +126,7 @@ class Patron
   end
 
   def umid
-    OpenStruct.new(id_type: "02", value: @data["uidnumber"].first, status: "ACTIVE")
+    OpenStruct.new(id_type: "02", value: @data["entityid"].first, status: "ACTIVE")
   end
 
   def to_h
@@ -183,12 +183,12 @@ class Patron
         {
           id_type: umid.id_type,
           value: umid.value,
-          status: umid.active
+          status: umid.status
         },
         {
           id_type: inst_id.id_type,
           value: inst_id.value,
-          status: inst_id.active
+          status: inst_id.status
         }
       ]
     }
@@ -212,6 +212,10 @@ class Patron
       )
     end
     hash
+  end
+
+  def to_json
+    to_h.to_json
   end
 
   # private?

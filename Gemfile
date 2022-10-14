@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "net-ldap"
+
 group :development, :test do
   gem "pry"
   gem "byebug"

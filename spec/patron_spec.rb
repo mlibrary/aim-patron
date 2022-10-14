@@ -73,7 +73,7 @@ describe Patron do
   context "#umid" do
     it "returns an object with the correct values" do
       expect(subject.umid.id_type).to eq("02")
-      expect(subject.umid.value).to eq("111111")
+      expect(subject.umid.value).to eq("99991111")
       expect(subject.umid.status).to eq("ACTIVE")
     end
   end
