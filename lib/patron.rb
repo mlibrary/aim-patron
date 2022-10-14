@@ -43,6 +43,12 @@ class Patron
     "SIS"
   end
 
+  def expiry_date
+  end
+
+  def purge_date
+  end
+
   def campus_code
     raise NotImplementedError
   end
@@ -59,15 +65,7 @@ class Patron
     raise NotImplementedError
   end
 
-  def stastic_category
-    raise NotImplementedError
-  end
-
-  def email_address
-    @data["mail"]&.first
-  end
-
-  def email_type
+  def statistic_category
     raise NotImplementedError
   end
 
@@ -103,8 +101,117 @@ class Patron
     end
   end
 
+  def addresses?
+    !addresses.empty?
+  end
+
+  def email_address
+    @data["mail"]&.first
+  end
+
+  def email_type
+    raise NotImplementedError
+  end
+
   def phone_number
     # to be implemented
+  end
+
+  def phone_number?
+    !!phone_number
+  end
+
+  def inst_id
+    OpenStruct.new(id_type: "05", value: "#{uniqname}@umich.edu", status: "ACTIVE")
+  end
+
+  def umid
+    OpenStruct.new(id_type: "02", value: @data["uidnumber"].first, status: "ACTIVE")
+  end
+
+  def to_h
+    hash = {
+      record_type: {
+        value: record_type
+      },
+      external_id: external_id,
+      primary_id: primary_id,
+      # first_name: first_name,
+      # middle_name: middle_name,
+      # last_name: last_name,
+      campus_code: {
+        value: campus_code
+      },
+      user_group: {
+        value: user_group
+      },
+      status: {
+        value: status
+      },
+      # status_date: status_date, not a thing in alma????
+      expiry_date: expiry_date,
+      purge_date: purge_date,
+      job_description: job_description,
+      user_statistic: [
+        {
+          statistic_category: {
+            value: statistic_category
+          }
+        }
+      ],
+      user_role: [
+        {
+          status: {value: "ACTIVE"},
+          scope: {value: "01UMICH_INST"},
+          role_type: {value: "200"}
+        }
+      ],
+      contact_info: {
+        address: [],
+        email: [
+          {
+            preferred: true,
+            email_address: email_address,
+            email_type: {
+              value: email_type
+            }
+          }
+        ],
+        phone: []
+      },
+      user_identifier: [
+        {
+          id_type: umid.id_type,
+          value: umid.value,
+          status: umid.active
+        },
+        {
+          id_type: inst_id.id_type,
+          value: inst_id.value,
+          status: inst_id.active
+        }
+      ]
+    }
+    hash[:middle_name] = middle_name if middle_name?
+    if phone_number?
+      hash[:contact_info][:phone].push(
+        {
+          preferred: true,
+          phone_number: phone_number,
+          phone_type: [
+            {value: "home"}
+          ]
+        }
+      )
+    end
+    if addresses?
+      hash[:contact_info][:address].push(
+        addresses.map do |address|
+          address.to_h
+        end
+      )
+    end
+    hash
   end
 
   # private?
@@ -135,22 +242,27 @@ class Patron
     end
 
     def line1
-      @raw.addr1 || "(no address)"
+      @raw&.addr1 || "(no address)"
     end
 
     def line2
+      @raw&.addr2
     end
 
     def city
+      @raw&.city
     end
 
     def state_province
+      @raw&.state
     end
 
     def postal_code
+      @raw&.postal
     end
 
     def country
+      @raw&.nation
     end
 
     def type
@@ -159,6 +271,15 @@ class Patron
 
     def preferred
       @raw.preferred || false
+    end
+
+    def to_h
+      hash = ["preferred", "line1", "line2", "city", "state_province", "postal_code"].map do |x|
+        [x.to_sym, public_send(x)] if public_send(x)
+      end.compact.to_h
+      hash[:country] = {value: country} if country
+      hash[:address_type] = {value: type}
+      hash
     end
   end
 end

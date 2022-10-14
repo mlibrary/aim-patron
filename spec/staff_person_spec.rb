@@ -11,10 +11,10 @@ describe StaffPerson do
       expect(subject.user_group).to eq("02")
     end
   end
-  context "#campus" do
+  context "#campus_code" do
     it "comes from HR data" do
       @patron["umichhr"][0].sub!("UM_ANN-ARBOR", "UM_FLINT")
-      expect(subject.campus).to eq("UMFL")
+      expect(subject.campus_code).to eq("UMFL")
       expect(subject.base_inst_role["campus"]).to eq("UMAA")
     end
   end
@@ -30,7 +30,7 @@ describe StaffPerson do
   end
   context "#statistic_category" do
     it "returns ST" do
-      expect(subject.stastic_category).to eq("ST")
+      expect(subject.statistic_category).to eq("ST")
     end
   end
   context "#email_type" do

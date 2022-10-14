@@ -3,7 +3,7 @@ class StaffPerson < Employee
     "02"
   end
 
-  def stastic_category
+  def statistic_category
     "ST"
   end
 

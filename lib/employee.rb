@@ -5,7 +5,7 @@ class Employee < Patron
     "um_dearborn" => "UMDB"
   }
 
-  def campus
+  def campus_code
     HR_CAMPUS_MAP[hr_data.campus.downcase]
   end
 
