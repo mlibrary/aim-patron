@@ -3,11 +3,8 @@ require "yaml"
 require "net/ldap"
 require "date"
 require "byebug"
-require_relative "./name"
+
 require_relative "./patron"
-require_relative "./employee"
-require_relative "./staff_person"
-require_relative "./student"
 require_relative "./patron_mapper"
 class ProcessLdap
   def self.ldap_attributes

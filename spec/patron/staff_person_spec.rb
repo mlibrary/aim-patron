@@ -1,7 +1,7 @@
-describe StaffPerson do
+describe Patron::StaffPerson do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
-    @name_double = instance_double(Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
+    @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
   end
   subject do
     described_class.new(data: @patron, name: @name_double)

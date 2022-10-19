@@ -1,14 +1,14 @@
 describe Patron do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
-    @name_double = instance_double(Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
+    @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
   end
   subject do
     described_class.new(data: @patron, name: @name_double)
   end
   # this is here because Patron doesn't implement everything, but some of
   # the methods need everything
-  let(:staff_person) { StaffPerson.new(data: @patron, name: @name_double) }
+  let(:staff_person) { Patron::StaffPerson.new(data: @patron, name: @name_double) }
   it "returns record_type" do
     # this is static
     expect(subject.record_type).to eq("PUBLIC")
