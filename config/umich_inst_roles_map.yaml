@@ -1,42 +1,41 @@
-FacultyAA:
+- key: FacultyAA
   role: faculty
   campus: UMAA
-RegularStaffAA:
+- key: RegularStaffAA
   role: staff
   campus: UMAA
-EnrolledStudentStudentAA:
+- key: EnrolledStudentStudentAA
   role: student
   campus: UMAA
-StudentAA:
+- key: StudentAA
   role: student
   campus: UMAA
-SponsoredAffiliateAA:
-  role: student
+- key: SponsoredAffiliateAA
+  role: sponsored_affiliate
   campus: UMAA
-FacultyFLNT:
+- key: FacultyFLNT
   role: faculty
   campus: UMFL
-RegularStaffFLNT:
+- key: RegularStaffFLNT
   role: student
   campus: UMFL
-  EnrolledStudentFLNT:
+- key: EnrolledStudentFLNT
   role: student
   campus: UMFL
-StudentFLNT:
+- key: StudentFLNT
   role: student
   campus: UMFL
-FacultyDBRN:
+- key: FacultyDBRN
+  role: faculty
+  campus: UMDB
+- key: RegularStaffDBRN
+  role: staff
+  campus: UMDB
+- key: EnrolledStudentDBRN
   role: student
   campus: UMDB
-RegularStaffDBRN:
-  role: student
-  campus: UMDB
-EnrolledStudentDBRN:
-  role: student
-  campus: UMDB
-TemporaryStaffAA:
-  role: student
+- key: TemporaryStaffAA
+  role: temporary_staff 
   campus: UMAA
-Retiree:
-  role: student
-  campus: UMAA
+- key: Retiree
+  role: retiree

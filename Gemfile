@@ -1,5 +1,9 @@
 source "https://rubygems.org"
 
+gem "net-ldap"
+gem "shale"
+gem "rexml"
+
 group :development, :test do
   gem "pry"
   gem "byebug"
