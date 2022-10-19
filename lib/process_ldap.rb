@@ -8,6 +8,7 @@ require_relative "./patron"
 require_relative "./employee"
 require_relative "./staff_person"
 require_relative "./student"
+require_relative "./patron_mapper"
 class ProcessLdap
   def self.ldap_attributes
     [
@@ -84,10 +85,8 @@ class ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
-      my_data = JSON.parse(data.to_h.to_json)
-      puts JSON.pretty_generate(Patron.for(my_data).to_h)
+      puts PatronMapper::User.from_hash(Patron.for(data).to_h).to_xml(pretty: true)
     end
-    nil
   end
 
   def to_s

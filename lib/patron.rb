@@ -115,6 +115,7 @@ class Patron
 
   def phone_number
     # to be implemented
+    "555-555-5555"
   end
 
   def phone_number?
@@ -131,85 +132,70 @@ class Patron
 
   def to_h
     hash = {
-      record_type: {
-        value: record_type
-      },
-      external_id: external_id,
-      primary_id: primary_id,
-      # first_name: first_name,
-      # middle_name: middle_name,
-      # last_name: last_name,
-      campus_code: {
-        value: campus_code
-      },
-      user_group: {
-        value: user_group
-      },
-      status: {
-        value: status
-      },
-      # status_date: status_date, not a thing in alma????
-      expiry_date: expiry_date,
-      purge_date: purge_date,
-      job_description: job_description,
-      user_statistic: [
-        {
-          statistic_category: {
-            value: statistic_category
-          }
+      "record_type" => record_type,
+      "external_id" => external_id,
+      "primary_id" => primary_id,
+      "first_name" => first_name,
+      "middle_name" => middle_name,
+      "last_name" => last_name,
+      "campus_code" => campus_code,
+      "user_group" => user_group,
+      "status" => status,
+      # "status_date" => status_date, not a thing in alma????
+      "expiry_date" => expiry_date,
+      "purge_date" => purge_date,
+      "job_description" => job_description,
+      "user_statistics" => {
+        "user_statistic" => {
+          "statistic_category" => statistic_category
         }
-      ],
-      user_role: [
-        {
-          status: {value: "ACTIVE"},
-          scope: {value: "01UMICH_INST"},
-          role_type: {value: "200"}
+      },
+      "user_roles" => {
+        "user_role" => {
+          "status" => "ACTIVE",
+          "scope" => "01UMICH_INST",
+          "role_type" => "200"
         }
-      ],
-      contact_info: {
-        address: [],
-        email: [
+      },
+      "contact_info" => {
+        "emails" => {
+          "email" =>
+           {
+             "preferred" => true,
+             "email_address" => email_address,
+             "email_types" => {"email_type" => email_type}
+           }
+        }
+      },
+      "user_identifiers" => {
+        "user_identifier" => [
           {
-            preferred: true,
-            email_address: email_address,
-            email_type: {
-              value: email_type
-            }
+            "id_type" => umid.id_type,
+            "value" => umid.value,
+            "status" => umid.status
+          },
+          {
+            "id_type" => inst_id.id_type,
+            "value" => inst_id.value,
+            "status" => inst_id.status
           }
-        ],
-        phone: []
-      },
-      user_identifier: [
-        {
-          id_type: umid.id_type,
-          value: umid.value,
-          status: umid.status
-        },
-        {
-          id_type: inst_id.id_type,
-          value: inst_id.value,
-          status: inst_id.status
-        }
-      ]
+        ]
+      }
     }
-    hash[:middle_name] = middle_name if middle_name?
+    # hash[:middle_name] = middle_name if middle_name?
     if phone_number?
-      hash[:contact_info][:phone].push(
+      hash["contact_info"]["phones"] = {"phone" =>
         {
-          preferred: true,
-          phone_number: phone_number,
-          phone_type: [
-            {value: "home"}
-          ]
-        }
-      )
+          "preferred" => true,
+          "phone_number" => phone_number,
+          "phone_types" => {"phone_type" => "home"}
+        }}
     end
     if addresses?
-      hash[:contact_info][:address].push(
+      hash["contact_info"]["addresses"] = {"address" =>
         addresses.map do |address|
           address.to_h
-        end
-      )
+        end}
     end
     hash
   end
@@ -278,11 +264,10 @@ class Patron
     end
 
     def to_h
-      hash = ["preferred", "line1", "line2", "city", "state_province", "postal_code"].map do |x|
-        [x.to_sym, public_send(x)] if public_send(x)
+      hash = ["preferred", "line1", "line2", "city", "country", "state_province", "postal_code"].map do |x|
+        [x, public_send(x)]
       end.compact.to_h
-      hash[:country] = {value: country} if country
-      hash[:address_type] = {value: type}
+      hash["address_types"] = {"address_type" => type}
       hash
     end
   end

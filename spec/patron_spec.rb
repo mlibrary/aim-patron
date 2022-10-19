@@ -124,17 +124,14 @@ describe Patron do
       it "has an expect address hash" do
         address = staff_person.umich_address
         expect(address.to_h).to eq({
-          line1: "Library Info Tech - AIM",
-          line2: "300 Hatcher North",
-          city: "Ann Arbor",
-          state_province: "MI",
-          postal_code: "48109-1190",
-          country: {
-            value: "UNITED STATES"
-          },
-          address_type: {
-            value: "work"
-          }
+          "line1" => "Library Info Tech - AIM",
+          "line2" => "300 Hatcher North",
+          "city" => "Ann Arbor",
+          "state_province" => "MI",
+          "postal_code" => "48109-1190",
+          "preferred" => false,
+          "country" => "UNITED STATES",
+          "address_types" => {"address_type" => "work"}
         })
       end
       it "shows '(no address)' when theres no addr1" do
