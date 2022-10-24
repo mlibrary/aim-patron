@@ -1,4 +1,4 @@
-describe Name do
+describe Patron::Name do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
   end

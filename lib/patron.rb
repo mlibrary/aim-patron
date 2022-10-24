@@ -1,4 +1,9 @@
 require "forwardable"
+require_relative "./patron/employee"
+require_relative "./patron/staff_person"
+require_relative "./patron/student"
+require_relative "./patron/name"
+
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
 
