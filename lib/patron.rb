@@ -1,6 +1,8 @@
 require "forwardable"
 require_relative "./patron/employee"
 require_relative "./patron/staff_person"
+require_relative "./patron/temporary_staff_person"
+require_relative "./patron/faculty"
 require_relative "./patron/student"
 require_relative "./patron/name"
 
@@ -17,8 +19,12 @@ class Patron
     case base_inst_role(data)&.dig("role")
     when "student"
       Student.new(data: data)
+    when "faculty"
+      Faculty.new(data: data)
     when "staff"
       StaffPerson.new(data: data)
+    when "temporary_staff"
+      TemporaryStaffPerson.new(data: data)
     else
       Employee.new(data: data)
     end
