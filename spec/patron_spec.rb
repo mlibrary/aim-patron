@@ -13,6 +13,9 @@ describe Patron do
     # this is static
     expect(subject.record_type).to eq("PUBLIC")
   end
+  it "returns not implemented error for includable?" do
+    expect { subject.includable? }.to raise_error(NotImplementedError)
+  end
   it "returns external_id" do
     # this is static
     expect(subject.external_id).to eq("SIS")
