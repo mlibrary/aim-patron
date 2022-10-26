@@ -6,6 +6,10 @@ class Patron
       "um_dearborn" => "UMDB"
     }
 
+    def includable?
+      true
+    end
+
     def campus_code
       HR_CAMPUS_MAP[hr_data.campus.downcase]
     end
@@ -37,8 +41,12 @@ class Patron
       "work"
     end
 
+    def hr_attribute
+      "umichhr"
+    end
+
     def hr_list
-      hr = role == "sponsored_affiliate" ? @data["umichsponsorshipdetail"] : @data["umichhr"]
+      hr = role == "sponsored_affiliate" ? @data["umichsponsorshipdetail"] : @data[hr_attribute]
       raise if hr.nil? # there always has to be hrdata
       ldap_fields(hr)
     end

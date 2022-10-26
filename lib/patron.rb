@@ -3,6 +3,8 @@ require_relative "./patron/employee"
 require_relative "./patron/staff_person"
 require_relative "./patron/temporary_staff_person"
 require_relative "./patron/faculty"
+require_relative "./patron/sponsored_affiliate"
+require_relative "./patron/retiree"
 require_relative "./patron/student"
 require_relative "./patron/name"
 
@@ -36,6 +38,10 @@ class Patron
   def initialize(data:, name: Name.new(data))
     @data = data
     @name = name
+  end
+
+  def includable?
+    raise NotImplementedError
   end
 
   def uniqname
