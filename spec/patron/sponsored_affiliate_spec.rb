@@ -40,6 +40,10 @@ xdescribe Patron::SponsoredAffiliate do
     it "returns SA" do
       expect(subject.statistic_category).to eq("SA")
     end
+    it "returns CN for contractors" do
+      @patron["umichsponsorshipdetail"][0].sub!("umichSponsorReason=Researchers", "umichSponsorReason=Contractors")
+      expect(subject.statistic_category).to eq("CN")
+    end
   end
   context "#email_type" do
     it "returns work" do
@@ -54,6 +58,10 @@ xdescribe Patron::SponsoredAffiliate do
   context "#includable?" do
     it "returns true for includable sponsor reason" do
       expect(subject.includable?).to eq(true)
+    end
+    it "returns false for non-includable sponsor reason" do
+      @patron["umichsponsorshipdetail"][0].sub!("umichSponsorReason=Researchers", "umichSponsorReason=Other Guests")
+      expect(subject.includable?).to eq(false)
     end
     it "returns false for no sponsor start date" do
       @patron["umichsponsorshipdetail"][0].sub!("{umichSponsorStartDate=#{@start_date}}:", "")

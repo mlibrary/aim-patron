@@ -1,5 +1,19 @@
 class Patron
   class SponsoredAffiliate < Patron::Employee
+    # list of sponsor reasons as of October 2022
+    # the disallowed reasons have been commented out
+    ALLOWED_SPONSOR_REASONS = [
+      "Affiliates",
+      # "Associates",
+      "Contractors",
+      "Faculty",
+      # "LibraryContent",
+      # "Other Guests",
+      # "PC Participants",
+      "Researchers",
+      # "Subscribers",
+      "Temporary Staff"
+    ]
     def user_group
     end
 
