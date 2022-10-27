@@ -31,7 +31,7 @@ class Patron
     end
 
     def statistic_category
-       JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
+      JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
     end
 
     def hr_criteria(hr_item)
