@@ -3,6 +3,7 @@ require "yaml"
 require "net/ldap"
 require "date"
 require "byebug"
+require "csv"
 
 require_relative "./patron"
 require_relative "./patron_mapper"

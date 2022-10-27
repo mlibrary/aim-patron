@@ -3,3 +3,4 @@
 .cache
 coverage
 .byebug_history
+.irb_history
