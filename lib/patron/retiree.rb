@@ -1,6 +1,7 @@
 class Patron
   class Retiree < Patron::Employee
     def user_group
+      "01"
     end
 
     def hr_criteria(hr_item)
@@ -9,6 +10,7 @@ class Patron
     end
 
     def statistic_category
+      "RF"
     end
     # def includable?
     # this will see if hr_data has anything

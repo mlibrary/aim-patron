@@ -1,4 +1,4 @@
-xdescribe Patron::Retiree do
+describe Patron::Retiree do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @patron["umichinstroles"][1] = "Retiree"

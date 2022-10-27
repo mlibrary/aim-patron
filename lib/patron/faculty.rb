@@ -27,10 +27,11 @@ class Patron
       "201120" => "EM" # ASST PROF EMERITUS/A
     }
     def user_group
+      "01"
     end
 
     def statistic_category
-      # JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
+       JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
     end
 
     def hr_criteria(hr_item)

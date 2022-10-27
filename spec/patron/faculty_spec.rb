@@ -1,4 +1,4 @@
-xdescribe Patron::Faculty do
+describe Patron::Faculty do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @patron["umichinstroles"][1] = "FacultyAA"
