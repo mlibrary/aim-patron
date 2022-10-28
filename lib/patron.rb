@@ -35,9 +35,10 @@ class Patron
   extend Forwardable
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
 
-  def initialize(data:, name: Name.new(data))
+  def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
     @data = data
     @name = name
+    @current_schedule = current_schedule
   end
 
   def includable?
@@ -61,9 +62,11 @@ class Patron
   end
 
   def expiry_date
+    @current_schedule.default_expiry_date
   end
 
   def purge_date
+    @current_schedule.default_purge_date
   end
 
   def campus_code

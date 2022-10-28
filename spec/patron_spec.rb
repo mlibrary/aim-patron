@@ -2,9 +2,10 @@ describe Patron do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
+    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"), default_purge_date: Date.parse("2024-01-31"))
   end
   subject do
-    described_class.new(data: @patron, name: @name_double)
+    described_class.new(data: @patron, name: @name_double, current_schedule: @current_schedule_double)
   end
   # this is here because Patron doesn't implement everything, but some of
   # the methods need everything
@@ -64,9 +65,13 @@ describe Patron do
       expect(subject.telephone_number).to be_nil
     end
   end
-  it "returns a status_date"
-  it "returns an expiry_date"
-  it "returns a purge_date"
+  it "returns a status_date from current schedule; Not sure this is needed.........."
+  it "returns an expiry_date" do
+    expect(subject.expiry_date).to eq(Date.parse("2022-01-31"))
+  end
+  it "returns a purge_date from currentschedule" do
+    expect(subject.purge_date).to eq(Date.parse("2024-01-31"))
+  end
   it "returns not implemented error for job_description" do
     expect { subject.job_description }.to raise_error(NotImplementedError)
   end
