@@ -1,5 +1,5 @@
 class Patron
-  class RegionalStudent < Patron
+  class RegionalStudent < Patron::Student
     CLASS_STANDING_STATISTIC_CATEGORY_MAP = {
       "FR" => "UN",
       "SO" => "UN",
@@ -14,9 +14,6 @@ class Patron
       "SP" => "GR",
       "PN" => "GR"
     }
-    def campus_code
-      base_inst_role["campus"]
-    end
 
     def ldap_campus
       if campus_code == "UMFL"
@@ -55,6 +52,12 @@ class Patron
 
     def current_term_status
       ldap_fields(@data["umich#{ldap_campus}currenttermstatus"] || [])
+    end
+
+    def job_description
+      current_term_status.map do |term|
+        term.programDesc
+      end.compact.first
     end
 
     def includable?

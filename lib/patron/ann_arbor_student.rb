@@ -1,5 +1,5 @@
 class Patron
-  class AnnArborStudent < Patron
+  class AnnArborStudent < Patron::Student
     PCODE_PROG_STATISTIC_CATEGORY_MAP = {
       "U" => "UN",
       "G" => "GR",
@@ -34,6 +34,10 @@ class Patron
 
     def user_group
       statistic_category == "UN" ? "04" : "03"
+    end
+
+    def job_description
+      academic_program.acadProgDescr
     end
 
     def statistic_category

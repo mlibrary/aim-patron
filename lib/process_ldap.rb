@@ -84,7 +84,9 @@ class ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
-      puts PatronMapper::User.from_hash(Patron.for(data).to_h).to_xml(pretty: true)
+      patron = Patron.for(data)
+      puts PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      return patron
     end
   end
 

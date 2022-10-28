@@ -20,17 +20,27 @@ class Patron
   end
 
   def self.for(data)
-    case base_inst_role(data)&.dig("role")
+    inst_role = base_inst_role(data)
+    case inst_role&.dig("role")
     when "student"
-      Student.new(data: data)
+      case inst_role["campus"]
+      when "UMAA"
+        AnnArborStudent.new(data: data)
+      when "UMDB"
+        RegionalStudent.new(data: data)
+      when "UMFL"
+        RegionalStudent.new(data: data)
+      end
     when "faculty"
       Faculty.new(data: data)
     when "staff"
       StaffPerson.new(data: data)
     when "temporary_staff"
       TemporaryStaffPerson.new(data: data)
-    else
-      Employee.new(data: data)
+    when "sponsored_affiliate"
+      SponsoredAffiliate.new(data: data)
+    when "retiree"
+      Retiree.new(data: data)
     end
   end
 
@@ -164,8 +174,8 @@ class Patron
       "user_group" => user_group,
       "status" => status,
       # "status_date" => status_date, not a thing in alma????
-      "expiry_date" => expiry_date,
-      "purge_date" => purge_date,
+      "expiry_date" => expiry_date.strftime("%D"),
+      "purge_date" => purge_date.strftime("%D"),
       "job_description" => job_description,
       "user_statistics" => {
         "user_statistic" => {
