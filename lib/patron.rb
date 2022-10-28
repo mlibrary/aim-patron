@@ -6,6 +6,7 @@ require_relative "./patron/faculty"
 require_relative "./patron/sponsored_affiliate"
 require_relative "./patron/retiree"
 require_relative "./patron/student"
+require_relative "./patron/ann_arbor_student"
 require_relative "./patron/name"
 
 class Patron
@@ -241,7 +242,9 @@ class Patron
 
   def ldap_field(row)
     OpenStruct.new(row.split(":").map do |element|
-      element.gsub(/["{}]/, "").split("=")
+      array = element.gsub(/["{}]/, "").split("=")
+      array[1] = nil if array.length == 1
+      array
     end.to_h)
   end
 
