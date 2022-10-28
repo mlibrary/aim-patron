@@ -7,6 +7,7 @@ require_relative "./patron/sponsored_affiliate"
 require_relative "./patron/retiree"
 require_relative "./patron/student"
 require_relative "./patron/ann_arbor_student"
+require_relative "./patron/regional_student"
 require_relative "./patron/name"
 
 class Patron

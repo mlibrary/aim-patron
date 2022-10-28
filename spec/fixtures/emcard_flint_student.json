@@ -12,7 +12,7 @@
         "uid=emcard,ou=People,dc=umich,dc=edu"
     ],
     "entityid": [
-        "78297764"
+        "9999999"
     ],
     "ferpa": [
         "N"
@@ -81,7 +81,7 @@
         "Card"
     ],
     "umichflntcurrenttermstatus": [
-        "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}"
+        "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202230}:{lastEnrolledTerm=202220}"
     ],
     "umichflnttermstatus": [
         "{academicYear=2022}:{academicPeriod=202220}:{academicPeriodDesc=Winter 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MBA}:{degreeDesc=Master Business Admin}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=BUS}:{majorDesc=Business Administration}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202120}:{lastEnrolledTerm=202220}",
