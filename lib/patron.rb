@@ -6,6 +6,8 @@ require_relative "./patron/faculty"
 require_relative "./patron/sponsored_affiliate"
 require_relative "./patron/retiree"
 require_relative "./patron/student"
+require_relative "./patron/ann_arbor_student"
+require_relative "./patron/regional_student"
 require_relative "./patron/name"
 
 class Patron
@@ -18,26 +20,37 @@ class Patron
   end
 
   def self.for(data)
-    case base_inst_role(data)&.dig("role")
+    inst_role = base_inst_role(data)
+    case inst_role&.dig("role")
     when "student"
-      Student.new(data: data)
+      case inst_role["campus"]
+      when "UMAA"
+        AnnArborStudent.new(data: data)
+      when "UMDB"
+        RegionalStudent.new(data: data)
+      when "UMFL"
+        RegionalStudent.new(data: data)
+      end
     when "faculty"
       Faculty.new(data: data)
     when "staff"
       StaffPerson.new(data: data)
     when "temporary_staff"
       TemporaryStaffPerson.new(data: data)
-    else
-      Employee.new(data: data)
+    when "sponsored_affiliate"
+      SponsoredAffiliate.new(data: data)
+    when "retiree"
+      Retiree.new(data: data)
     end
   end
 
   extend Forwardable
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
 
-  def initialize(data:, name: Name.new(data))
+  def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
     @data = data
     @name = name
+    @current_schedule = current_schedule
   end
 
   def includable?
@@ -61,9 +74,11 @@ class Patron
   end
 
   def expiry_date
+    @current_schedule.default_expiry_date
   end
 
   def purge_date
+    @current_schedule.default_purge_date
   end
 
   def campus_code
@@ -159,8 +174,8 @@ class Patron
       "user_group" => user_group,
       "status" => status,
       # "status_date" => status_date, not a thing in alma????
-      "expiry_date" => expiry_date,
-      "purge_date" => purge_date,
+      "expiry_date" => expiry_date.strftime("%D"),
+      "purge_date" => purge_date.strftime("%D"),
       "job_description" => job_description,
       "user_statistics" => {
         "user_statistic" => {
@@ -238,7 +253,9 @@ class Patron
 
   def ldap_field(row)
     OpenStruct.new(row.split(":").map do |element|
-      element.gsub(/["{}]/, "").split("=")
+      array = element.gsub(/["{}]/, "").split("=")
+      array[1] = nil if array.length == 1
+      array
     end.to_h)
   end
 

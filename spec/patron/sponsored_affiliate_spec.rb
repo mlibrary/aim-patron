@@ -2,13 +2,14 @@ xdescribe Patron::SponsoredAffiliate do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
+    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.today.next_year, default_purge_date: Date.today.next_year(2))
     @start_date = Date.today.prev_day.strftime("%D")
     @end_date = Date.today.next_day.strftime("%D")
     @sponsorship_info = "{campus=UM_ANN-ARBOR}:{deptId=99999}:{deptGroup=SOME_DEPT_GROUP}:{deptDescription=SOME DEPARTMENT DESCRIPTION}:{deptGroupDescription=School of Something}:{deptVPArea=PRVST_EXC_VP_ACA_AFF}:{umichSponsorAdmin=sponsoruniqname}:{umichSponsorRequestor=otheruniqname}:{umichSponsorReason=Researchers}:{umichSponsorStartDate=#{@start_date}}:{umichSponsorEndDate=#{@end_date}}:{umichSponsorshipCn=111-111-11111111111111111-111}"
     @patron["umichsponsorshipdetail"] = [@sponsorship_info]
   end
   subject do
-    described_class.new(data: @patron, name: @name_double)
+    described_class.new(data: @patron, name: @name_double, current_schedule: @current_schedule_double)
   end
   context "#user_group" do
     it "returns 01" do
@@ -89,11 +90,21 @@ xdescribe Patron::SponsoredAffiliate do
     end
   end
   context "#expiry_date" do
-    it "returns SponsorEndDate when it is before the regular expire date"
-    it "returns the regular expire date when the SponsorEndDate is later"
+    it "returns SponsorEndDate when it is before the regular expire date" do
+      expect(subject.expiry_date).to eq(@end_date)
+    end
+    it "returns the regular expire date when the SponsorEndDate is later" do
+      @end_date = Date.today.next_year(2)
+      expect(subject.expiry_date).to eq(Date.today.next_year)
+    end
   end
   context "#purge_date" do
-    it "returns SponsorEndDate + 2Y when the SponsorEndDate is before the regular expire date"
-    it "returns the regular purge_date when the SponsorEndDate is later than the expire_date"
+    it "returns SponsorEndDate + 2Y when the SponsorEndDate is before the regular expire date" do
+      expect(subject.purge_date).to eq(@end_date.next_year(2))
+    end
+    it "returns the regular purge_date when the SponsorEndDate is later than the expire_date" do
+      @end_date = Date.today.next_year(2)
+      expect(subject.expiry_date).to eq(Date.today.next_year(2))
+    end
   end
 end

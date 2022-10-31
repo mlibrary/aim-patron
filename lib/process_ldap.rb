@@ -3,9 +3,11 @@ require "yaml"
 require "net/ldap"
 require "date"
 require "byebug"
+require "csv"
 
 require_relative "./patron"
 require_relative "./patron_mapper"
+require_relative "./current_schedule"
 class ProcessLdap
   def self.ldap_attributes
     [
@@ -82,7 +84,9 @@ class ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
-      puts PatronMapper::User.from_hash(Patron.for(data).to_h).to_xml(pretty: true)
+      patron = Patron.for(data)
+      puts PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      return patron
     end
   end
 
