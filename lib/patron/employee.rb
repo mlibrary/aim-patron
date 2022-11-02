@@ -59,8 +59,6 @@ class Patron
         hr_item.jobCategory == "Staff" && hr_item.regTemp == "T"
       when "sponsored_affiliate"
         true
-      when "retiree"
-        hr_item.jobCategory == "Faculty"
       end
     end
 

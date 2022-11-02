@@ -44,7 +44,7 @@ describe Patron::Retiree do
       expect(subject.email_type).to eq("work")
     end
   end
-  xcontext "#includable?" do
+  context "#includable?" do
     it "is true for retired faculty" do
       expect(subject.includable?).to eq(true)
     end

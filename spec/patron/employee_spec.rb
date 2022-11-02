@@ -17,11 +17,6 @@ describe Patron::Employee do
       @patron["umichhr"][0].sub!("Staff", "Faculty")
       expect(subject.hr_data.jobCategory).to eq("Faculty")
     end
-    it "returns the appropriate object for faculty retiree" do
-      @patron["umichinstroles"][1] = "Retiree"
-      @patron["umichhr"][0].sub!("Staff", "Faculty")
-      expect(subject.hr_data.jobCategory).to eq("Faculty")
-    end
     it "returns the sponsored affiliate info if the user is a sponsored affiliate" do
       @patron["umichinstroles"][1] = "SponsoredAffiliateAA"
       @patron["umichsponsorshipdetail"] = ["{campus=UM_ANN-ARBOR}:{deptId=9999999}:{deptGroup=SCHOOL_SOCIAL_WORK}:{deptDescription=School of Social Work}:{deptGroupDescription=School of Social Work}:{deptVPArea=SOMETHING}:{umichSponsorAdmin=someuniqname}:{umichSponsorRequestor=someuniqname}:{umichSponsorReason=Temporary Staff}:{umichSponsorStartDate=02/27/2019}:{umichSponsorEndDate=02/03/2023}:{umichSponsorshipCn=somestringofsomekind}"]
