@@ -5,7 +5,7 @@ describe Patron::Name do
   subject do
     described_class.new(@patron)
   end
-  xcontext "givenname, middle, and last name" do
+  context "givenname, middle, and last name" do
     context "#first_name" do
       it "is a string" do
         expect(subject.first_name).to eq("Emily")

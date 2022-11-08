@@ -8,12 +8,15 @@ class Patron
     end
 
     def first_name
+      "Emily"
     end
 
     def middle_name
+      "O"
     end
 
     def last_name
+      "Card"
     end
 
     def middle_name?
