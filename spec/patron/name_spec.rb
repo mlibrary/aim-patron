@@ -27,7 +27,7 @@ describe Patron::Name do
       end
     end
   end
-  xcontext "no givenname, but existing displayname" do
+  context "no givenname, but existing displayname" do
     before(:each) do
       @patron.delete("givenname")
     end
@@ -52,10 +52,10 @@ describe Patron::Name do
       end
     end
   end
-  xcontext "no umichdisplaysn, but existing displayname" do
+  context "no umichdisplaysn, but existing displayname" do
     before(:each) do
       @patron.delete("umichdisplaysn")
-      @patron["givenname"][0] = "EmilyGivenName"
+      @patron["givenname"][0] = "EmilyGivenName" # this is to make sure that the first name is from givenname but not from displayname
     end
     context "#first_name" do
       it "is a string" do
@@ -78,7 +78,7 @@ describe Patron::Name do
       end
     end
   end
-  xcontext "no umichdisplaysn or givenname, but existing displayname" do
+  context "no umichdisplaysn or givenname, but existing displayname" do
     before(:each) do
       @patron.delete("umichdisplaysn")
       @patron.delete("givenname")
@@ -104,7 +104,7 @@ describe Patron::Name do
       end
     end
   end
-  xcontext "no umichdisplaymiddle, but existing displayname" do
+  context "no umichdisplaymiddle, but existing displayname" do
     before(:each) do
       @patron.delete("umichdisplaymiddle")
       @patron["displayname"][0] = "Emily O Card"
@@ -130,7 +130,7 @@ describe Patron::Name do
       end
     end
   end
-  xcontext "no umichdisplaymiddle, and displayname doesn't have a middle name" do
+  context "no umichdisplaymiddle, and displayname doesn't have a middle name" do
     before(:each) do
       @patron.delete("umichdisplaymiddle")
     end
