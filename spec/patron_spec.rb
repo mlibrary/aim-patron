@@ -48,21 +48,21 @@ describe Patron do
   it "returns an email_address" do
     expect(subject.email_address).to eq("emcard@umich.edu")
   end
-  xcontext "#telephone_number" do
+  context "#phone_number" do
     it "returns the first telephoneNumber if there is one" do
-      @patron["telephoneNumber"].push("someotherphone number")
+      @patron["telephonenumber"].push("someotherphone number")
       @patron["umichpermanentphone"] = ["my-umich-permanent-phone-number", "second-number"]
-      expect(subject.telephone_number).to eq("734-999-9999")
+      expect(subject.phone_number).to eq("734-999-9999")
     end
-    it "returns umichPermanetnPhone if there is no telephonNumber" do
+    it "returns umichPermanentPhone if there is no telephoneNumber" do
       @patron.delete("telephonenumber")
-      @patron["umichPermanentPhone"] = ["my-umich-permanent-phone-number", "second-number"]
-      expect(subject.telephone_number).to eq("my-umich-permanent-phone-number")
+      @patron["umichpermanentphone"] = ["my-umich-permanent-phone-number", "second-number"]
+      expect(subject.phone_number).to eq("my-umich-permanent-phone-number")
     end
     it "returns nil if no telephone numbers at all" do
       @patron.delete("telephonenumber")
-      @patron.delete("umichPermanentPhone")
-      expect(subject.telephone_number).to be_nil
+      @patron.delete("umichpermanentphone")
+      expect(subject.phone_number).to be_nil
     end
   end
   it "returns a status_date from current schedule; Not sure this is needed.........."

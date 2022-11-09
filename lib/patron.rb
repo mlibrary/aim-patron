@@ -146,8 +146,7 @@ class Patron
   end
 
   def phone_number
-    # to be implemented
-    "555-555-5555"
+    @data["telephonenumber"]&.first || @data["umichpermanentphone"]&.first
   end
 
   def phone_number?
