@@ -1,4 +1,4 @@
-xdescribe Patron::SponsoredAffiliate do
+describe Patron::SponsoredAffiliate do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
@@ -28,7 +28,7 @@ xdescribe Patron::SponsoredAffiliate do
       expect(subject.job_description).to eq("SOME DEPARTMENT DESCRIPTION (99999)")
     end
   end
-  context "#hr_data" do
+  xcontext "#hr_data" do
     it "returns appropriate object for sponsored affiliate" do
       expect(subject.hr_data.umichSponsorAdmin).to eq("sponsoruniqname")
     end
@@ -37,7 +37,7 @@ xdescribe Patron::SponsoredAffiliate do
       expect(subject.hr_data).to be_nil
     end
   end
-  context "#statistic_category" do
+  xcontext "#statistic_category" do
     it "returns SA" do
       expect(subject.statistic_category).to eq("SA")
     end
@@ -56,7 +56,7 @@ xdescribe Patron::SponsoredAffiliate do
       expect(subject.email_type).to eq("work")
     end
   end
-  context "#includable?" do
+  xcontext "#includable?" do
     it "returns true for includable sponsor reason" do
       expect(subject.includable?).to eq(true)
     end
@@ -89,7 +89,7 @@ xdescribe Patron::SponsoredAffiliate do
       expect(subject.includable?).to eq(false)
     end
   end
-  context "#expiry_date" do
+  xcontext "#expiry_date" do
     it "returns SponsorEndDate when it is before the regular expire date" do
       expect(subject.expiry_date).to eq(@end_date)
     end
@@ -98,7 +98,7 @@ xdescribe Patron::SponsoredAffiliate do
       expect(subject.expiry_date).to eq(Date.today.next_year)
     end
   end
-  context "#purge_date" do
+  xcontext "#purge_date" do
     it "returns SponsorEndDate + 2Y when the SponsorEndDate is before the regular expire date" do
       expect(subject.purge_date).to eq(@end_date.next_year(2))
     end

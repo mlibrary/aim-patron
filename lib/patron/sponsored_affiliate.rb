@@ -15,9 +15,11 @@ class Patron
       "Temporary Staff"
     ]
     def user_group
+      "01"
     end
 
     def statistic_category
+      "SA"
     end
 
     def hr_criteria(hr_item)
