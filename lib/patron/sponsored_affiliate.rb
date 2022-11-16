@@ -19,7 +19,11 @@ class Patron
     end
 
     def statistic_category
-      "SA"
+      if hr_data.umichSponsorReason == "Contractors"
+        "CN"
+      else
+        "SA"
+      end
     end
 
     def hr_criteria(hr_item)
@@ -29,6 +33,10 @@ class Patron
 
     def hr_attribute
       "umichsponsorshipdetail"
+    end
+
+    def expiry_date
+      Date.parse(hr_data.umichSponsorEndDate)
     end
 
     # def includable?

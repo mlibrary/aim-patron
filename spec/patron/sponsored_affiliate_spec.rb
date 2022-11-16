@@ -28,16 +28,16 @@ describe Patron::SponsoredAffiliate do
       expect(subject.job_description).to eq("SOME DEPARTMENT DESCRIPTION (99999)")
     end
   end
-  xcontext "#hr_data" do
+  context "#hr_data" do
     it "returns appropriate object for sponsored affiliate" do
       expect(subject.hr_data.umichSponsorAdmin).to eq("sponsoruniqname")
     end
-    it "returns nil for UROP department" do
-      @patron["deptDescription"] = "LSA UG: UROP"
+    xit "returns nil for UROP department" do
+      @patron["umichsponsorshipdetail"][0].sub!("deptDescription=SOME DEPARTMENT DESCRIPTION", "deptDescription=LSA UG\: UROP")
       expect(subject.hr_data).to be_nil
     end
   end
-  xcontext "#statistic_category" do
+  context "#statistic_category" do
     it "returns SA" do
       expect(subject.statistic_category).to eq("SA")
     end
