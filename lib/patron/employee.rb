@@ -52,14 +52,7 @@ class Patron
     end
 
     def hr_criteria(hr_item)
-      case role
-      when "faculty"
-        hr_item.jobCategory == "Faculty"
-      when "temporary_staff"
-        hr_item.jobCategory == "Staff" && hr_item.regTemp == "T"
-      when "sponsored_affiliate"
-        true
-      end
+      raise NotImplementedError
     end
 
     def hr_filtered
