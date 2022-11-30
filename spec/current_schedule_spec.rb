@@ -45,11 +45,6 @@ describe CurrentSchedule do
       expect(subject.default_expiry_date).to eq(Date.parse("2022-08-30"))
     end
   end
-  context "#default_purge_date" do
-    it "is 2 years after the expiry date" do
-      expect(subject.default_purge_date).to eq(Date.parse("2024-04-30"))
-    end
-  end
   context "#includable_term?" do
     it "handles a single matching term in the config" do
       expect(subject.includable_term?("W22")).to eq(true)

@@ -14,10 +14,6 @@ class CurrentSchedule
     Date.parse(@current_config["Expiry Date"])
   end
 
-  def default_purge_date
-    default_expiry_date.next_year(2)
-  end
-
   def includable_term?(term)
     @current_config["Term"].split(", ").include?(term)
   end

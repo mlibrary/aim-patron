@@ -2,7 +2,7 @@ describe Patron do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
-    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"), default_purge_date: Date.parse("2024-01-31"))
+    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"))
   end
   subject do
     described_class.new(data: @patron, name: @name_double, current_schedule: @current_schedule_double)

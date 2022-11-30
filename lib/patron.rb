@@ -78,7 +78,7 @@ class Patron
   end
 
   def purge_date
-    @current_schedule.default_purge_date
+    expiry_date.next_year(2)
   end
 
   def campus_code
@@ -251,7 +251,7 @@ class Patron
   end
 
   def ldap_field(row)
-    OpenStruct.new(row.split(":").map do |element|
+    OpenStruct.new(row.split("}:").map do |element|
       array = element.gsub(/["{}]/, "").split("=")
       array[1] = nil if array.length == 1
       array
