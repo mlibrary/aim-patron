@@ -1,4 +1,4 @@
-xdescribe Patron::TemporaryStaffPerson do
+describe Patron::TemporaryStaffPerson do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @patron["umichinstroles"][1] = "TemporaryStaffAA"

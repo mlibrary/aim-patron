@@ -2,7 +2,7 @@ describe Patron do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
-    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"), default_purge_date: Date.parse("2024-01-31"))
+    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"))
   end
   subject do
     described_class.new(data: @patron, name: @name_double, current_schedule: @current_schedule_double)
@@ -48,21 +48,21 @@ describe Patron do
   it "returns an email_address" do
     expect(subject.email_address).to eq("emcard@umich.edu")
   end
-  xcontext "#telephone_number" do
+  context "#phone_number" do
     it "returns the first telephoneNumber if there is one" do
-      @patron["telephoneNumber"].push("someotherphone number")
+      @patron["telephonenumber"].push("someotherphone number")
       @patron["umichpermanentphone"] = ["my-umich-permanent-phone-number", "second-number"]
-      expect(subject.telephone_number).to eq("734-999-9999")
+      expect(subject.phone_number).to eq("734-999-9999")
     end
-    it "returns umichPermanetnPhone if there is no telephonNumber" do
+    it "returns umichPermanentPhone if there is no telephoneNumber" do
       @patron.delete("telephonenumber")
-      @patron["umichPermanentPhone"] = ["my-umich-permanent-phone-number", "second-number"]
-      expect(subject.telephone_number).to eq("my-umich-permanent-phone-number")
+      @patron["umichpermanentphone"] = ["my-umich-permanent-phone-number", "second-number"]
+      expect(subject.phone_number).to eq("my-umich-permanent-phone-number")
     end
     it "returns nil if no telephone numbers at all" do
       @patron.delete("telephonenumber")
-      @patron.delete("umichPermanentPhone")
-      expect(subject.telephone_number).to be_nil
+      @patron.delete("umichpermanentphone")
+      expect(subject.phone_number).to be_nil
     end
   end
   it "returns a status_date from current schedule; Not sure this is needed.........."

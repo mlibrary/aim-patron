@@ -10,6 +10,10 @@ describe Patron::StaffPerson do
     it "returns 02" do
       expect(subject.user_group).to eq("02")
     end
+    it "retuns 01 for a GEO" do
+      @patron["umichhr"][0].sub!("jobcode=101904", "jobcode=205000")
+      expect(subject.user_group).to eq("01")
+    end
   end
   context "#campus_code" do
     it "comes from HR data" do
@@ -31,6 +35,10 @@ describe Patron::StaffPerson do
   context "#statistic_category" do
     it "returns ST" do
       expect(subject.statistic_category).to eq("ST")
+    end
+    it "retuns GE for a GEO" do
+      @patron["umichhr"][0].sub!("jobcode=101904", "jobcode=205000")
+      expect(subject.statistic_category).to eq("GE")
     end
   end
   context "#email_type" do
