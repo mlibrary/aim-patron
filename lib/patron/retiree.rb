@@ -13,10 +13,5 @@ class Patron
     def statistic_category
       "RF"
     end
-
-    def includable?
-      # this will see if hr_data has anything
-      !hr_data.nil?
-    end
   end
 end

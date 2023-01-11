@@ -20,6 +20,15 @@ describe Patron::Faculty do
       expect(subject.base_inst_role["campus"]).to eq("UMAA")
     end
   end
+  context "#includable?" do
+    it "is true when it has a Faculty job category" do
+      expect(subject.includable?).to eq(true)
+    end
+    it "is false when there is no appropriate job category" do
+      @patron["umichhr"][0].sub!("jobCategory=Faculty", "jobCategory=Staff")
+      expect(subject.includable?).to eq(false)
+    end
+  end
   context "#job_description" do
     it "returns a job_description from HR data" do
       expect(subject.job_description).to eq("Library Info Tech - AIM (470430)")

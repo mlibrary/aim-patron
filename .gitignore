@@ -4,3 +4,5 @@
 coverage
 .byebug_history
 .irb_history
+scratch/*.xml
+scratch/*.zip

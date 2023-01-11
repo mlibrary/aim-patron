@@ -61,6 +61,10 @@ class ProcessLdap
   PASSWORD = ENV.fetch("LDAP_PASSWORD")
   HOST = ENV.fetch("LDAP_HOST")
 
+  def initialize(output: $stdout)
+    @output = output
+  end
+
   def ldap
     @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, username: USERNAME, password: PASSWORD})
   end
@@ -77,6 +81,10 @@ class ProcessLdap
     self.class.ldap_attributes
   end
 
+  # To do: This needs to write to a file
+  # The filename needs to be part of the class
+  # It can know how to write to a file (or something file like)
+  # Is it a good idea for it to know which file to write to?
   def process
     ldap.search(
       base: "ou=People,dc=umich,dc=edu",
@@ -84,10 +92,12 @@ class ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
+      puts data["uid"].first
       patron = Patron.for(data)
-      puts PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      return patron
+      next unless patron.includable?
+      @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
     end
+    true
   end
 
   def to_s
@@ -96,7 +106,8 @@ class ProcessLdap
 end
 
 class ProcessLdapDaily < ProcessLdap
-  def initialize(date)
+  def initialize(date:, output: $stdout)
+    @output = output
     @date = DateTime.parse(date).strftime("%Y%m%d") + "050000.0Z" # just set it to EST diff from UTC
   end
 
@@ -112,8 +123,9 @@ class ProcessLdapDaily < ProcessLdap
 end
 
 class ProcessLdapOneUser < ProcessLdap
-  def initialize(uniqname)
+  def initialize(uniqname:, output: $stdout)
     @uniqname = uniqname
+    @output = output
   end
 
   def filter

@@ -7,7 +7,7 @@ class Patron
     }
 
     def includable?
-      true
+      !hr_data.nil?
     end
 
     def campus_code
