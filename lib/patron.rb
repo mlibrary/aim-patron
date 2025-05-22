@@ -1,22 +1,20 @@
 require "forwardable"
-require_relative "./patron/employee"
-require_relative "./patron/staff_person"
-require_relative "./patron/temporary_staff_person"
-require_relative "./patron/faculty"
-require_relative "./patron/sponsored_affiliate"
-require_relative "./patron/retiree"
-require_relative "./patron/student"
-require_relative "./patron/ann_arbor_student"
-require_relative "./patron/regional_student"
-require_relative "./patron/name"
+require_relative "patron/employee"
+require_relative "patron/staff_person"
+require_relative "patron/temporary_staff_person"
+require_relative "patron/faculty"
+require_relative "patron/sponsored_affiliate"
+require_relative "patron/retiree"
+require_relative "patron/student"
+require_relative "patron/ann_arbor_student"
+require_relative "patron/regional_student"
+require_relative "patron/name"
 
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
 
   def self.base_inst_role(data)
-    INST_ROLE_MAP.filter_map do |inst_role|
-      inst_role if data["umichinstroles"].any? { |x| x == inst_role["key"] }
-    end.first
+    INST_ROLE_MAP.find { |inst_role| data["umichinstroles"].any? { |x| x == inst_role["key"] } }
   end
 
   def self.for(data)

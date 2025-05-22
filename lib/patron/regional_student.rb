@@ -30,7 +30,7 @@ class Patron
       # the 2 digit year year unless it's fall.
       year_ish = acad_period[2, 2].to_i
 
-      year = semester == "F" ? year_ish - 1 : year_ish
+      year = (semester == "F") ? year_ish - 1 : year_ish
 
       "#{semester}#{year}"
     end

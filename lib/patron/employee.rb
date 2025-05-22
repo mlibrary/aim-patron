@@ -46,7 +46,7 @@ class Patron
     end
 
     def hr_list
-      hr = role == "sponsored_affiliate" ? @data["umichsponsorshipdetail"] : @data[hr_attribute]
+      hr = (role == "sponsored_affiliate") ? @data["umichsponsorshipdetail"] : @data[hr_attribute]
       raise if hr.nil? # there always has to be hrdata
       ldap_fields(hr)
     end

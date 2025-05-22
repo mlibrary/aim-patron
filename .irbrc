@@ -1,1 +1,1 @@
-require_relative "./lib/process_ldap"
+require_relative "lib/process_ldap"
