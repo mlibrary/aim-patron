@@ -1,4 +1,4 @@
-require_relative "./process_ldap"
+require_relative "process_ldap"
 # require sftp
 
 FILENAME = "/app/scratch/output.xml"
