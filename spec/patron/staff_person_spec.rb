@@ -55,5 +55,13 @@ describe Patron::StaffPerson do
     it "is nil when valid" do
       expect(subject.exclude_reason).to be_nil
     end
+    it "is invalid_job_category when not staff" do
+      @patron["umichhr"][0].sub!("jobCategory=Staff", "jobCategory=Invalid")
+      expect(subject.exclude_reason).to eq("job_category_not_staff")
+    end
+    it "is not_regular_employee when not regTemp is not R" do
+      @patron["umichhr"][0].sub!("regTemp=R", "regTemp=T")
+      expect(subject.exclude_reason).to eq("not_regular_employee")
+    end
   end
 end
