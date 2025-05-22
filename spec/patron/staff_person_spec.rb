@@ -51,4 +51,9 @@ describe Patron::StaffPerson do
       expect(subject.email_type).to eq("work")
     end
   end
+  context "exclude_reason" do
+    it "is nil when valid" do
+      expect(subject.exclude_reason).to be_nil
+    end
+  end
 end

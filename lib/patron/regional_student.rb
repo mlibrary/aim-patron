@@ -65,5 +65,9 @@ class Patron
         term.registered == "Y" && @current_schedule.includable_term?(term(term.academicPeriod))
       end
     end
+
+    def exclude_reason
+      "not_registered" unless includable?
+    end
   end
 end

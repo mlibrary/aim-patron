@@ -13,5 +13,9 @@ class Patron
     def statistic_category
       "RF"
     end
+
+    def exclude_reason
+      "retired_person_not_faculty" unless includable?
+    end
   end
 end

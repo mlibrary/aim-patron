@@ -58,4 +58,26 @@ describe Patron::RegionalStudent do
       expect(subject.includable?).to eq(false)
     end
   end
+  context "#exclude_reason" do
+    it "is nil when there is a registered for a current term" do
+      allow(@current_schedule_double).to receive(:includable_term?) do |termcode|
+        termcode == "SP22" # this the registered one
+      end
+      expect(subject.exclude_reason).to be_nil
+    end
+    it "is not_registered when not registered for any term" do
+      @patron["umichflntcurrenttermstatus"][0].sub!("registered=Y", "registered=N")
+      expect(subject.exclude_reason).to eq("not_registered")
+    end
+    it "is false when registered for a term that is not a current term" do
+      allow(@current_schedule_double).to receive(:includable_term?) do |termcode|
+        termcode == "W24" # this will be later than Spring or Summer 2022
+      end
+      expect(subject.exclude_reason).to eq("not_registered")
+    end
+    it "is false when there's no CurrentTermStatus" do
+      @patron.delete("umichflntcurrenttermstatus")
+      expect(subject.exclude_reason).to eq("not_registered")
+    end
+  end
 end
