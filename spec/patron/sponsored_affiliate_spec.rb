@@ -40,7 +40,7 @@ describe Patron::SponsoredAffiliate do
       expect(subject.hr_data).to be_nil
     end
     it "returns nil for UROP department" do
-      @patron["umichsponsorshipdetail"][0].sub!("deptDescription=SOME DEPARTMENT DESCRIPTION", "deptDescription=LSA UG\: UROP")
+      @patron["umichsponsorshipdetail"][0].sub!("deptDescription=SOME DEPARTMENT DESCRIPTION", "deptDescription=LSA UG: UROP")
       expect(subject.hr_data).to be_nil
     end
     it "returns false for no sponsor start date" do

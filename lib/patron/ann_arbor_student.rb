@@ -33,7 +33,7 @@ class Patron
     end
 
     def user_group
-      statistic_category == "UN" ? "04" : "03"
+      (statistic_category == "UN") ? "04" : "03"
     end
 
     def job_description
@@ -44,7 +44,7 @@ class Patron
       return "CD" if academic_program.acadCareer == "GRAC"
       pcode = academic_program.acadCareer[0]
       program_num = academic_program.acadProg
-      pcode_prog = pcode == "A" ? program_num : pcode
+      pcode_prog = (pcode == "A") ? program_num : pcode
       PCODE_PROG_STATISTIC_CATEGORY_MAP[pcode_prog]
     end
 

@@ -1,33 +1,62 @@
-ARG RUBY_VERSION=3.2
-FROM ruby:${RUBY_VERSION}
+################################################################################
+# BASE
+################################################################################
+FROM ruby:3.4-slim AS base
 
-ARG BUNDLER_VERSION=2.4.3
-ARG UNAME=app
 ARG UID=1000
 ARG GID=1000
+ARG NODE_MAJOR=20
 
 
-LABEL maintainer="uniqname@umich.edu"
-
-## Install Vim (optional)
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
-  vim-tiny \
+  build-essential \
+  libtool \ 
+  curl \
   zip
 
-RUN gem install bundler:${BUNDLER_VERSION}
 
-RUN groupadd -g ${GID} -o ${UNAME}
-RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash ${UNAME}
+RUN groupadd -g ${GID} -o app
+RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
+
+ENV GEM_HOME=/gems
+ENV PATH="$PATH:/gems/bin"
 RUN mkdir -p /gems && chown ${UID}:${GID} /gems
 
-USER $UNAME
 
-ENV BUNDLE_PATH /gems
+ENV BUNDLE_PATH /app/vendor/bundle
+
+# Change to app and back so that bundler created files in /gems are owned by the
+# app user
+USER app
+RUN gem install bundler
+USER root
 
 WORKDIR /app
 
-##For a production build copy the app files and run bundle install
-#COPY --chown=${UID}:${GID} . /app
-#RUN bundle _${BUNDLER_VERSION}_ install
+################################################################################
+# DEVELOPMENT                                           								       # 
+################################################################################
+FROM base AS development
+
+RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
+  vim-tiny\
+  git
+
+
+USER app
 
 CMD ["tail", "-f", "/dev/null"]
+
+################################################################################
+# PRODUCTION                                                                   #
+################################################################################
+FROM base AS production
+
+
+ENV BUNDLE_WITHOUT=development:test
+
+COPY --chown=${UID}:${GID} . /app
+
+USER app
+
+RUN bundle install

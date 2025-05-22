@@ -5,9 +5,9 @@ require "date"
 require "byebug"
 require "csv"
 
-require_relative "./patron"
-require_relative "./patron_mapper"
-require_relative "./current_schedule"
+require_relative "patron"
+require_relative "patron_mapper"
+require_relative "current_schedule"
 class ProcessLdap
   def self.ldap_attributes
     [
