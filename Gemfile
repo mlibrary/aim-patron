@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "base64"
+gem "csv"
 gem "net-ldap"
 gem "shale"
 gem "rexml"

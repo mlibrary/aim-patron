@@ -1,11 +1,9 @@
 services:
-  web:
-    build: .
+  app:
+    build:
+      context: .
+      target: development
     volumes:
       - .:/app
-      - gem_cache:/gems
     env_file:
       - .env
-        
-volumes:
-  gem_cache:

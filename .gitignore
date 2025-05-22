@@ -6,3 +6,4 @@ coverage
 .irb_history
 scratch/*.xml
 scratch/*.zip
+vendor/
