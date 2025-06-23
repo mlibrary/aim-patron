@@ -49,12 +49,27 @@ class Patron
     end
 
     def includable?
-      registered_or_candidate = ldap_fields(@data["umichaacurrenttermstatus"]).any? do |term|
+      registered_or_candidate? && valid_academic_career?
+    end
+
+    def exclude_reason
+      if !registered_or_candidate?
+        "not_registered_or_candidate"
+      elsif !valid_academic_career?
+        "invalid_academic_career"
+      end
+    end
+
+    private
+
+    def registered_or_candidate?
+      ldap_fields(@data["umichaatermstatus"]).any? do |term|
         (term.regStatus == "RGSD" || term.acadCareer == "GRAC") && @current_schedule.includable_term?(term(term.termCode))
       end
-      valid_academic_career = !statistic_category.nil?
+    end
 
-      registered_or_candidate && valid_academic_career
+    def valid_academic_career?
+      !statistic_category.nil?
     end
   end
 end

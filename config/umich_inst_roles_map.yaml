@@ -17,7 +17,7 @@
   role: faculty
   campus: UMFL
 - key: RegularStaffFLNT
-  role: student
+  role: staff
   campus: UMFL
 - key: EnrolledStudentFLNT
   role: student
@@ -31,7 +31,7 @@
 - key: RegularStaffDBRN
   role: staff
   campus: UMDB
-- key: EnrolledStudentDBRN
+- key: StudentDBRN
   role: student
   campus: UMDB
 - key: TemporaryStaffAA

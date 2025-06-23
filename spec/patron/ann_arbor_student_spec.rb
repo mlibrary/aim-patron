@@ -58,12 +58,13 @@ describe Patron::AnnArborStudent do
       expect(subject.includable?).to eq(true)
     end
     it "is true when NRGS, but is in grad school" do
-      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
-      @patron["umichaacurrenttermstatus"][1].sub!("acadCareer=UENG", "acadCareer=GRAC")
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][2].sub!("acadCareer=UENG", "acadCareer=GRAC")
       expect(subject.includable?).to eq(true)
     end
     it "is false when not registered for any term" do
-      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][3].sub!("RGSD", "NRGS")
       expect(subject.includable?).to eq(false)
     end
     it "is false when registered for a term that is not a current term" do
@@ -75,6 +76,34 @@ describe Patron::AnnArborStudent do
     it "is false when there's an invalid acadCareer" do
       @patron["umichaaacadprogram"][0].sub!("acadCareer=UENG", "acadCareer=NOTACAREER")
       expect(subject.includable?).to eq(false)
+    end
+  end
+  context "#exclude_reason" do
+    it "is is nil when registered" do
+      allow(@current_schedule_double).to receive(:includable_term?) do |termcode|
+        termcode == "SP22" # this an uregistered one
+      end
+      expect(subject.exclude_reason).to be_nil
+    end
+    it "is nil when NRGS, but is in grad school" do
+      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
+      @patron["umichaacurrenttermstatus"][1].sub!("acadCareer=UENG", "acadCareer=GRAC")
+      expect(subject.exclude_reason).to eq(nil)
+    end
+    it "is false when not registered for any term" do
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][3].sub!("RGSD", "NRGS")
+      expect(subject.exclude_reason).to eq("not_registered_or_candidate")
+    end
+    it "is false when registered for a term that is not a current term" do
+      allow(@current_schedule_double).to receive(:includable_term?) do |termcode|
+        termcode == "W24" # this will be later than Spring or Summer 2022
+      end
+      expect(subject.exclude_reason).to eq("not_registered_or_candidate")
+    end
+    it "is false when there's an invalid acadCareer" do
+      @patron["umichaaacadprogram"][0].sub!("acadCareer=UENG", "acadCareer=NOTACAREER")
+      expect(subject.exclude_reason).to eq("invalid_academic_career")
     end
   end
 end

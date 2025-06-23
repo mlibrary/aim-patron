@@ -53,4 +53,13 @@ describe Patron::Retiree do
       expect(subject.includable?).to eq(false)
     end
   end
+  context "#exclude_reason" do
+    it "is nil for retired faculty" do
+      expect(subject.exclude_reason).to be_nil
+    end
+    it "is retired_person_not_faculty for retired staff (and other non faculty)" do
+      @patron["umichhr"][0].sub!("jobCategory=Faculty", "jobCategory=Staff")
+      expect(subject.exclude_reason).to eq("retired_person_not_faculty")
+    end
+  end
 end

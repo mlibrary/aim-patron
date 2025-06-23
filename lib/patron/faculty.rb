@@ -37,5 +37,9 @@ class Patron
     def hr_criteria(hr_item)
       hr_item.jobCategory == "Faculty"
     end
+
+    def exclude_reason
+      "no_faculty_job_category" unless includable?
+    end
   end
 end

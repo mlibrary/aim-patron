@@ -51,6 +51,10 @@ class Patron
       ldap_fields(hr)
     end
 
+    def exclude_reason
+      raise NotImplementedError
+    end
+
     def hr_criteria(hr_item)
       raise NotImplementedError
     end

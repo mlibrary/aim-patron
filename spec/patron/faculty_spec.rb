@@ -29,6 +29,16 @@ describe Patron::Faculty do
       expect(subject.includable?).to eq(false)
     end
   end
+  context "#exclude_reason" do
+    it "is nil when it has a Faculty job category" do
+      expect(subject.exclude_reason).to be_nil
+    end
+    it "is false when there is no appropriate job category" do
+      @patron["umichhr"][0].sub!("jobCategory=Faculty", "jobCategory=Staff")
+      expect(subject.exclude_reason).to eq("no_faculty_job_category")
+    end
+  end
+
   context "#job_description" do
     it "returns a job_description from HR data" do
       expect(subject.job_description).to eq("Library Info Tech - AIM (470430)")

@@ -92,6 +92,27 @@ describe Patron::SponsoredAffiliate do
       expect(subject.includable?).to eq(true)
     end
   end
+  context "#exclude_reason" do
+    it "is nil when includable" do
+      expect(subject.exclude_reason).to be_nil
+    end
+    it "is invalid_sponsor_reason when not included sponsor reason" do
+      @patron["umichsponsorshipdetail"][0].sub!("umichSponsorReason=Researchers", "umichSponsorReason=InvalidReason")
+      expect(subject.exclude_reason).to eq("invalid_sponsor_reason")
+    end
+    it "is in_urop when in urop" do
+      @patron["umichsponsorshipdetail"][0].sub!("deptDescription=SOME DEPARTMENT DESCRIPTION", "deptDescription=LSA UG: UROP")
+      expect(subject.exclude_reason).to eq("in_urop")
+    end
+    it "is start_date_in_the_future when it's in the future" do
+      @patron["umichsponsorshipdetail"][0].sub!("umichSponsorStartDate=#{@start_date_str}", "umichSponsorStartDate=#{@end_date}")
+      expect(subject.exclude_reason).to eq("start_date_in_the_future")
+    end
+    it "is end_date_in_the_past when it's in the past" do
+      @patron["umichsponsorshipdetail"][0].sub!("umichSponsorEndDate=#{@end_date_str}", "umichSponsorEndDate=#{@start_date_str}")
+      expect(subject.exclude_reason).to eq("end_date_in_the_past")
+    end
+  end
   context "#expiry_date" do
     it "returns SponsorEndDate when it is before the regular expiry date" do
       expect(subject.expiry_date).to eq(@end_date)
