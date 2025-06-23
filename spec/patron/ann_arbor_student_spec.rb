@@ -58,12 +58,13 @@ describe Patron::AnnArborStudent do
       expect(subject.includable?).to eq(true)
     end
     it "is true when NRGS, but is in grad school" do
-      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
-      @patron["umichaacurrenttermstatus"][1].sub!("acadCareer=UENG", "acadCareer=GRAC")
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][2].sub!("acadCareer=UENG", "acadCareer=GRAC")
       expect(subject.includable?).to eq(true)
     end
     it "is false when not registered for any term" do
-      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][3].sub!("RGSD", "NRGS")
       expect(subject.includable?).to eq(false)
     end
     it "is false when registered for a term that is not a current term" do
@@ -90,7 +91,8 @@ describe Patron::AnnArborStudent do
       expect(subject.exclude_reason).to eq(nil)
     end
     it "is false when not registered for any term" do
-      @patron["umichaacurrenttermstatus"][1].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][2].sub!("RGSD", "NRGS")
+      @patron["umichaatermstatus"][3].sub!("RGSD", "NRGS")
       expect(subject.exclude_reason).to eq("not_registered_or_candidate")
     end
     it "is false when registered for a term that is not a current term" do

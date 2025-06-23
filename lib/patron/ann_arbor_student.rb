@@ -63,7 +63,7 @@ class Patron
     private
 
     def registered_or_candidate?
-      ldap_fields(@data["umichaacurrenttermstatus"]).any? do |term|
+      ldap_fields(@data["umichaatermstatus"]).any? do |term|
         (term.regStatus == "RGSD" || term.acadCareer == "GRAC") && @current_schedule.includable_term?(term(term.termCode))
       end
     end
