@@ -17,7 +17,7 @@
   role: faculty
   campus: UMFL
 - key: RegularStaffFLNT
-  role: student
+  role: staff
   campus: UMFL
 - key: EnrolledStudentFLNT
   role: student
