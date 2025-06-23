@@ -57,7 +57,7 @@ class ProcessLdap
     end
   end
 
-  USERNAME = ENV.fetch("LDAP_USERNAME")
+  DISTINGUISHED_NAME = ENV.fetch("LDAP_DN")
   PASSWORD = ENV.fetch("LDAP_PASSWORD")
   HOST = ENV.fetch("LDAP_HOST")
 
@@ -66,7 +66,7 @@ class ProcessLdap
   end
 
   def ldap
-    @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, username: USERNAME, password: PASSWORD})
+    @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, dn: DISTINGUISHED_NAME, password: PASSWORD}, port: 636, encryption: {method: :simple_tls})
   end
 
   def filter
