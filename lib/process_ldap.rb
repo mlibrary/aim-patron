@@ -42,7 +42,7 @@ class ProcessLdap
 
   def self.roles_filter
     [
-      "EnrolledStudentDBRN",
+      "StudentDBRN",
       "StudentFLNT",
       "StudentAA",
       "Faculty*",

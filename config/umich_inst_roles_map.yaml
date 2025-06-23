@@ -31,7 +31,7 @@
 - key: RegularStaffDBRN
   role: staff
   campus: UMDB
-- key: EnrolledStudentDBRN
+- key: StudentDBRN
   role: student
   campus: UMDB
 - key: TemporaryStaffAA
