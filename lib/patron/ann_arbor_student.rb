@@ -16,7 +16,12 @@ class Patron
       "02116" => "GR",
       "02125" => "GR",
       "02114" => "GR",
-      "02096" => "GR"
+      "02096" => "GR",
+      "02104" => "GR", # Dent Postgrad IntTeam for Impl
+      "02115" => "GR", # Dent Postgrad Pr Prosthod 1 yr
+      "02214" => "GR", # Dent Postgrad Endodontics 9 mo
+      "02282" => "GR", # Dent Postgrad Regenerative 1Yr
+      "02478" => "GR" # Knight-Wallace Grad Non-degree
     }
     def term(termcode)
       # only use the first 3 characters of the term code to generate a number
