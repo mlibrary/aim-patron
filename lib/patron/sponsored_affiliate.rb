@@ -18,6 +18,10 @@ class Patron
       "01"
     end
 
+    def role
+      "sponsored_affiliate"
+    end
+
     def statistic_category
       if hr_data.umichSponsorReason == "Contractors"
         "CN"

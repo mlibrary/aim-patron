@@ -6,6 +6,10 @@ class Patron
       "205800" # GRAD STU STAFF ASST
     ]
 
+    def role
+      "staff"
+    end
+
     def user_group
       geo? ? "01" : "02"
     end
