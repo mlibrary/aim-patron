@@ -3,7 +3,7 @@ class Patron
     # list of sponsor reasons as of October 2022
     # the disallowed reasons have been commented out
     ALLOWED_SPONSOR_REASONS = [
-      "Affiliates",
+      # "Affiliates",
       # "Associates",
       "Contractors",
       "Faculty",
