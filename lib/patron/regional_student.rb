@@ -16,11 +16,12 @@ class Patron
     }
 
     def ldap_campus
-      if campus_code == "UMFL"
-        "flnt"
-      else
-        "dbrn"
-      end
+      raise NotImplementedError
+      # if campus_code == "UMFL"
+      # "flnt"
+      # else
+      # "dbrn"
+      # end
     end
 
     def term(acad_period)

@@ -8,6 +8,9 @@ require_relative "patron/retiree"
 require_relative "patron/student"
 require_relative "patron/ann_arbor_student"
 require_relative "patron/regional_student"
+require_relative "patron/flint_student"
+require_relative "patron/dearborn_student"
+
 require_relative "patron/name"
 
 class Patron
@@ -17,30 +20,30 @@ class Patron
     INST_ROLE_MAP.find { |inst_role| data["umichinstroles"].any? { |x| x == inst_role["key"] } }
   end
 
-  def self.for(data)
-    inst_role = base_inst_role(data)
-    case inst_role&.dig("role")
-    when "student"
-      case inst_role["campus"]
-      when "UMAA"
-        AnnArborStudent.new(data: data)
-      when "UMDB"
-        RegionalStudent.new(data: data)
-      when "UMFL"
-        RegionalStudent.new(data: data)
-      end
-    when "faculty"
-      Faculty.new(data: data)
-    when "staff"
-      StaffPerson.new(data: data)
-    when "temporary_staff"
-      TemporaryStaffPerson.new(data: data)
-    when "sponsored_affiliate"
-      SponsoredAffiliate.new(data: data)
-    when "retiree"
-      Retiree.new(data: data)
-    end
-  end
+  # def self.for(data)
+  # inst_role = base_inst_role(data)
+  # case inst_role&.dig("role")
+  # when "student"
+  # case inst_role["campus"]
+  # when "UMAA"
+  # AnnArborStudent.new(data: data)
+  # when "UMDB"
+  # DearbornStudent.new(data: data)
+  # when "UMFL"
+  # FlintStudent.new(data: data)
+  # end
+  # when "faculty"
+  # Faculty.new(data: data)
+  # when "staff"
+  # StaffPerson.new(data: data)
+  # when "temporary_staff"
+  # TemporaryStaffPerson.new(data: data)
+  # when "sponsored_affiliate"
+  # SponsoredAffiliate.new(data: data)
+  # when "retiree"
+  # Retiree.new(data: data)
+  # end
+  # end
 
   def self.inst_roles_for(data)
     INST_ROLE_MAP.select do |inst_role|
@@ -72,9 +75,9 @@ class Patron
       when "UMAA"
         AnnArborStudent.new(data: data)
       when "UMDB"
-        RegionalStudent.new(data: data)
+        DearbornStudent.new(data: data)
       when "UMFL"
-        RegionalStudent.new(data: data)
+        FlintStudent.new(data: data)
       end
     when "faculty"
       Faculty.new(data: data)

@@ -23,6 +23,11 @@ class Patron
       "02282" => "GR", # Dent Postgrad Regenerative 1Yr
       "02478" => "GR" # Knight-Wallace Grad Non-degree
     }
+
+    def campus_code
+      "UMAA"
+    end
+
     def term(termcode)
       # only use the first 3 characters of the term code to generate a number
       term_number = termcode[0, 3].to_i
