@@ -52,6 +52,7 @@ class Patron
   end
 
   def self.valid_for(data)
+    return if test_user?(data)
     inst_roles = inst_roles_for(data)
     result = inst_roles.filter_map do |inst_role|
       user = for_inst_role(inst_role: inst_role, data: data)
@@ -61,11 +62,16 @@ class Patron
   end
 
   def self.exclude_reasons_for(data)
+    return ["Uniqname: #{data["uid"]}\tExclude Reason: test_user"] if test_user?(data)
     inst_roles = inst_roles_for(data)
     inst_roles.map do |inst_role|
       user = for_inst_role(inst_role: inst_role, data: data)
       "Uniqname: #{user.primary_id}\tInst Role: #{inst_role["key"]}\tExclude Reason: #{user.exclude_reason}"
     end
+  end
+
+  def self.test_user?(data)
+    data["uid"].first.match?(/ststv/)
   end
 
   def self.for_inst_role(inst_role:, data:)
