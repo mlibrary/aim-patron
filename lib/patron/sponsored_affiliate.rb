@@ -44,6 +44,8 @@ class Patron
         "start_date_in_the_future"
       elsif hr_list.none? { |x| valid_end_date?(x) }
         "end_date_in_the_past"
+      elsif !new_hire_or_temporary_staff?
+        "not_new_hire_or_temporary_staff"
       end
     end
 
@@ -65,6 +67,10 @@ class Patron
 
     def hr_attribute
       "umichsponsorshipdetail"
+    end
+
+    def new_hire_or_temporary_staff?
+      @data["umichinstroles"].include?("NewHire") || @data["umichinstroles"].include?("TemporaryStaffAA")
     end
 
     def expiry_date
