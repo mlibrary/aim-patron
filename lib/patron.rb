@@ -62,7 +62,7 @@ class Patron
   end
 
   def self.exclude_reasons_for(data)
-    return ["Uniqname: #{data["uid"]}\tExclude Reason: test_user"] if test_user?(data)
+    return ["Uniqname: #{data["uid"].first}\tExclude Reason: test_user"] if test_user?(data)
     inst_roles = inst_roles_for(data)
     inst_roles.map do |inst_role|
       user = for_inst_role(inst_role: inst_role, data: data)
