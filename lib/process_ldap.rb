@@ -99,13 +99,18 @@ class ProcessLdap
     ) do |data|
       puts data["uid"].first
       total_found += 1
-      patron = Patron.for(data)
-      if patron.includable?
+      patron = Patron.valid_for(data)
+      if patron
         @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-        total_loaded += 1
       else
-        puts "#{patron.primary_id}\t#{patron.class}\t#{patron.exclude_reason}"
+        puts Patron.exclude_reasons_for(data)
       end
+      # if patron.includable?
+      # @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      # total_loaded += 1
+      # else
+      # puts "#{patron.primary_id}\t#{patron.class}\t#{patron.exclude_reason}"
+      # end
     end
     unless ldap.get_operation_result.code == 0
       puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"

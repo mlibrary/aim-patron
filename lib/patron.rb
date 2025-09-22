@@ -42,6 +42,53 @@ class Patron
     end
   end
 
+  def self.inst_roles_for(data)
+    data["umichinstroles"].filter_map do |key|
+      INST_ROLE_MAP.find { |x| x["key"] == key }
+    end
+  end
+
+  def self.valid_for(data)
+    inst_roles = inst_roles_for(data)
+    result = inst_roles.filter_map do |inst_role|
+      user = for_inst_role(inst_role: inst_role, data: data)
+      user if user.includable?
+    end
+    result&.first
+  end
+
+  def self.exclude_reasons_for(data)
+    inst_roles = inst_roles_for(data)
+    inst_roles.map do |inst_role|
+      user = for_inst_role(inst_role: inst_role, data: data)
+      "Uniqname: #{user.primary_id}\tInst Role: #{inst_role["key"]}\tExclude Reason: #{user.exclude_reason}"
+    end
+  end
+
+  def self.for_inst_role(inst_role:, data:)
+    case inst_role["role"]
+    when "student"
+      case inst_role["campus"]
+      when "UMAA"
+        AnnArborStudent.new(data: data)
+      when "UMDB"
+        RegionalStudent.new(data: data)
+      when "UMFL"
+        RegionalStudent.new(data: data)
+      end
+    when "faculty"
+      Faculty.new(data: data)
+    when "staff"
+      StaffPerson.new(data: data)
+    when "temporary_staff"
+      TemporaryStaffPerson.new(data: data)
+    when "sponsored_affiliate"
+      SponsoredAffiliate.new(data: data)
+    when "retiree"
+      Retiree.new(data: data)
+    end
+  end
+
   extend Forwardable
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
 
