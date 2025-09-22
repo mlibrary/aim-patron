@@ -5,6 +5,7 @@ require "date"
 require "byebug"
 require "csv"
 
+require_relative "services"
 require_relative "patron"
 require_relative "patron_mapper"
 require_relative "current_schedule"
@@ -57,16 +58,17 @@ class ProcessLdap
     end
   end
 
-  DISTINGUISHED_NAME = ENV.fetch("LDAP_DN")
-  PASSWORD = ENV.fetch("LDAP_PASSWORD")
-  HOST = ENV.fetch("LDAP_HOST")
+  # DISTINGUISHED_NAME = ENV.fetch("LDAP_DN")
+  # PASSWORD = ENV.fetch("LDAP_PASSWORD")
+  # HOST = ENV.fetch("LDAP_HOST")
 
   def initialize(output: $stdout)
     @output = output
   end
 
   def ldap
-    @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, dn: DISTINGUISHED_NAME, password: PASSWORD}, port: 636, encryption: {method: :simple_tls})
+    S.ldap
+    # @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, dn: DISTINGUISHED_NAME, password: PASSWORD}, port: 636, encryption: {method: :simple_tls})
   end
 
   def filter
