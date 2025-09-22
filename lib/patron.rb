@@ -43,8 +43,8 @@ class Patron
   end
 
   def self.inst_roles_for(data)
-    data["umichinstroles"].filter_map do |key|
-      INST_ROLE_MAP.find { |x| x["key"] == key }
+    INST_ROLE_MAP.select do |inst_role|
+      data["umichinstroles"].include?(inst_role["key"])
     end
   end
 
