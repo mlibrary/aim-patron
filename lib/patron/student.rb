@@ -1,7 +1,7 @@
 class Patron
   class Student < Patron
     def campus_code
-      base_inst_role["campus"]
+      raise NotImplementedError
     end
 
     def email_type

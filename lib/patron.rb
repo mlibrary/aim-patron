@@ -8,41 +8,68 @@ require_relative "patron/retiree"
 require_relative "patron/student"
 require_relative "patron/ann_arbor_student"
 require_relative "patron/regional_student"
+
 require_relative "patron/name"
 
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
 
-  def self.base_inst_role(data)
-    INST_ROLE_MAP.find { |inst_role| data["umichinstroles"].any? { |x| x == inst_role["key"] } }
-  end
-
-  def self.for(data)
-    inst_role = base_inst_role(data)
-    case inst_role&.dig("role")
-    when "student"
-      case inst_role["campus"]
-      when "UMAA"
-        AnnArborStudent.new(data: data)
-      when "UMDB"
-        RegionalStudent.new(data: data)
-      when "UMFL"
-        RegionalStudent.new(data: data)
-      end
-    when "faculty"
-      Faculty.new(data: data)
-    when "staff"
-      StaffPerson.new(data: data)
-    when "temporary_staff"
-      TemporaryStaffPerson.new(data: data)
-    when "sponsored_affiliate"
-      SponsoredAffiliate.new(data: data)
-    when "retiree"
-      Retiree.new(data: data)
+  def self.inst_roles_for(data)
+    INST_ROLE_MAP.select do |inst_role|
+      data["umichinstroles"].include?(inst_role["key"])
     end
   end
 
+  def self.valid_for(data)
+    return if test_user?(data)
+    inst_roles = inst_roles_for(data)
+    result = inst_roles.filter_map do |inst_role|
+      user = for_inst_role(inst_role: inst_role, data: data)
+      user if user.includable?
+    end
+    result&.first
+  end
+
+  def self.exclude_reasons_for(data)
+    return ["Uniqname: #{data["uid"].first}\tExclude Reason: test_user"] if test_user?(data)
+    inst_roles = inst_roles_for(data)
+    inst_roles.map do |inst_role|
+      user = for_inst_role(inst_role: inst_role, data: data)
+      "Uniqname: #{user.primary_id}\tInst Role: #{inst_role["key"]}\tExclude Reason: #{user.exclude_reason}"
+    end
+  end
+
+  def self.test_user?(data)
+    data["uid"].first.match?(/ststv/)
+  end
+
+  def self.for_inst_role(inst_role:, data:)
+    klass = case inst_role["role"]
+    when "student"
+      case inst_role["campus"]
+      when "UMAA"
+        AnnArborStudent
+      when "UMDB"
+        DearbornStudent
+      when "UMFL"
+        FlintStudent
+      end
+    when "faculty"
+      Faculty
+    when "staff"
+      StaffPerson
+    when "temporary_staff"
+      TemporaryStaffPerson
+    when "sponsored_affiliate"
+      SponsoredAffiliate
+    when "retiree"
+      Retiree
+    end
+    klass.new(data: data)
+  end
+
   extend Forwardable
+
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
 
   def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
@@ -231,15 +258,6 @@ class Patron
 
   def to_json
     to_h.to_json
-  end
-
-  # private?
-  def role
-    base_inst_role["role"]
-  end
-
-  def base_inst_role
-    self.class.base_inst_role(@data)
   end
 
   def ldap_fields(array)

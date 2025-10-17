@@ -4,6 +4,10 @@ class Patron
       "01"
     end
 
+    def role
+      "retiree"
+    end
+
     def hr_criteria(hr_item)
       # this will need to be changed to exclude faculty
       hr_item.jobCategory == "Faculty"

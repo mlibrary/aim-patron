@@ -4,6 +4,10 @@ class Patron
       "14"
     end
 
+    def role
+      "temporary_staff"
+    end
+
     def statistic_category
       "TS"
     end

@@ -26,6 +26,10 @@ class Patron
       "201110" => "EM", # ASSOC PROF EMERITUS/A
       "201120" => "EM" # ASST PROF EMERITUS/A
     }
+    def role
+      "faculty"
+    end
+
     def user_group
       "01"
     end

@@ -3,7 +3,7 @@ class Patron
     # list of sponsor reasons as of October 2022
     # the disallowed reasons have been commented out
     ALLOWED_SPONSOR_REASONS = [
-      "Affiliates",
+      # "Affiliates",
       # "Associates",
       "Contractors",
       "Faculty",
@@ -18,6 +18,10 @@ class Patron
       "01"
     end
 
+    def role
+      "sponsored_affiliate"
+    end
+
     def statistic_category
       if hr_data.umichSponsorReason == "Contractors"
         "CN"
@@ -28,7 +32,7 @@ class Patron
 
     def hr_criteria(hr_item)
       # this will need to be changed to exclude UROP deptDescription
-      valid_sponsor_reason?(hr_item) && hr_item.deptDescription != "LSA UG: UROP" && valid_start_date?(hr_item) && valid_end_date?(hr_item)
+      (valid_sponsor_reason?(hr_item) && hr_item.deptDescription != "LSA UG: UROP" && valid_start_date?(hr_item) && valid_end_date?(hr_item)) || new_hire_or_temporary_staff?
     end
 
     def exclude_reason
@@ -61,6 +65,10 @@ class Patron
 
     def hr_attribute
       "umichsponsorshipdetail"
+    end
+
+    def new_hire_or_temporary_staff?
+      @data["umichinstroles"].include?("NewHire") || @data["umichinstroles"].include?("TemporaryStaffAA")
     end
 
     def expiry_date

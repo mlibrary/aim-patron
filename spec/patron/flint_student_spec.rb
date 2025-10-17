@@ -1,4 +1,4 @@
-describe Patron::RegionalStudent do
+describe Patron::FlintStudent do
   before(:each) do
     @patron = json_fixture("emcard_flint_student.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)

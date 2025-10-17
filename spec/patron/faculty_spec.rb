@@ -17,7 +17,6 @@ describe Patron::Faculty do
     it "comes from HR data" do
       @patron["umichhr"][0].sub!("UM_ANN-ARBOR", "UM_FLINT")
       expect(subject.campus_code).to eq("UMFL")
-      expect(subject.base_inst_role["campus"]).to eq("UMAA")
     end
   end
   context "#includable?" do
@@ -54,7 +53,7 @@ describe Patron::Faculty do
       expect(subject.statistic_category).to eq("FA")
     end
     it "handles an emeritus" do
-      # Professor Emeritus is always going to have faculty base_inst_role
+      # Professor Emeritus
       @patron["umichhr"][0].sub!("jobcode=101904", "jobcode=201070")
       expect(subject.statistic_category).to eq("EM")
     end

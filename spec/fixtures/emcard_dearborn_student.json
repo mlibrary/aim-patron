@@ -1,6 +1,6 @@
 {
     "associateddomain": [
-        "umflint.edu"
+        "umdearborn.edu"
     ],
     "cn": [
         "Emily Card"
@@ -80,10 +80,10 @@
     "umichdisplaysn": [
         "Card"
     ],
-    "umichflntcurrenttermstatus": [
+    "umichdbrncurrenttermstatus": [
         "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202230}:{lastEnrolledTerm=202220}"
     ],
-    "umichflnttermstatus": [
+    "umichdbrntermstatus": [
         "{academicYear=2022}:{academicPeriod=202220}:{academicPeriodDesc=Winter 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MBA}:{degreeDesc=Master Business Admin}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=BUS}:{majorDesc=Business Administration}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=Y}:{admitTerm=202120}:{lastEnrolledTerm=202220}",
         "{academicYear=2022}:{academicPeriod=202230}:{academicPeriodDesc=Spring 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}",
         "{academicYear=2022}:{academicPeriod=202240}:{academicPeriodDesc=Summer 2022}:{programLevel=GR}:{programLevelDesc=Graduate}:{primaryProgram=Y}:{studentStatus=AS}:{college=MG}:{collegeDesc=School of Management}:{degree=MS}:{degreeDesc=Master of Science}:{program=MS-MG}:{programDesc=MS - School of Management}:{major=LOD}:{majorDesc=Leadership & Org Dynamics}:{classStanding=GR}:{classStandingDesc=Graduate}:{registered=N}:{admitTerm=202230}:{lastEnrolledTerm=202220}",
@@ -93,7 +93,7 @@
         "{addr1=9999 Squirrel St}:{city=Detroit}:{state=MI}:{postal=48219-1169}:{nation=UNITED STATES}:{nationCode=USA}"
     ],
     "umichinstroles": [
-        "StudentFLNT"
+        "StudentDBRN"
     ],
     "umichnameofrecord": [
         "Emily Card"
