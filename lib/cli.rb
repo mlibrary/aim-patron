@@ -13,7 +13,6 @@ class CLI < Thor
 
   desc "ldap UNIQNAME", "returns the ldap info for a user"
   def ldap(uniqname)
-    puts uniqname
-    # ProcessLdapOneUser.new(uniqname).ldap_output
+    ProcessLdapOneUser.new(uniqname: uniqname).ldap_output
   end
 end
