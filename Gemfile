@@ -5,6 +5,7 @@ gem "csv"
 gem "net-ldap"
 gem "shale"
 gem "rexml"
+gem "thor"
 
 group :development, :test do
   gem "pry"
