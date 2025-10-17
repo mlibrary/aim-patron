@@ -19,7 +19,7 @@ RUN groupadd -g ${GID} -o app
 RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
 
 ENV GEM_HOME=/gems
-ENV PATH="$PATH:/gems/bin"
+ENV PATH="$PATH:/gems/bin:/app/exe"
 RUN mkdir -p /gems && chown ${UID}:${GID} /gems
 
 
