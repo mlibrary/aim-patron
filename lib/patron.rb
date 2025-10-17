@@ -14,10 +14,6 @@ require_relative "patron/name"
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
 
-  def self.base_inst_role(data)
-    INST_ROLE_MAP.find { |inst_role| data["umichinstroles"].any? { |x| x == inst_role["key"] } }
-  end
-
   def self.inst_roles_for(data)
     INST_ROLE_MAP.select do |inst_role|
       data["umichinstroles"].include?(inst_role["key"])
@@ -262,15 +258,6 @@ class Patron
 
   def to_json
     to_h.to_json
-  end
-
-  # private?
-  def role
-    base_inst_role["role"]
-  end
-
-  def base_inst_role
-    self.class.base_inst_role(@data)
   end
 
   def ldap_fields(array)

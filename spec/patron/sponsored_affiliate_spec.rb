@@ -23,7 +23,6 @@ describe Patron::SponsoredAffiliate do
     it "comes from HR data" do
       @patron["umichsponsorshipdetail"][0].sub!("UM_ANN-ARBOR", "UM_FLINT")
       expect(subject.campus_code).to eq("UMFL")
-      expect(subject.base_inst_role["campus"]).to eq("UMAA")
     end
   end
   context "#job_description" do

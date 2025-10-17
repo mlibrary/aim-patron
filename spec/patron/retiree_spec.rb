@@ -16,7 +16,6 @@ describe Patron::Retiree do
   context "#campus_code" do
     it "comes from HR data" do
       expect(subject.campus_code).to eq("UMAA")
-      expect(subject.base_inst_role["campus"]).to be_nil
     end
   end
   context "#job_description" do

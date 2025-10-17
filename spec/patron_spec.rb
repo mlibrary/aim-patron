@@ -92,13 +92,6 @@ describe Patron do
       expect(subject.inst_id.status).to eq("ACTIVE")
     end
   end
-  context "#base_inst_role" do
-    it "returns the correct heirarchical inst role" do
-      @patron["umichinstroles"].push("FacultyAA")
-      expect(subject.base_inst_role["role"]).to eq("faculty")
-      expect(subject.base_inst_role["campus"]).to eq("UMAA")
-    end
-  end
   context "addresses" do
     context "#umich_address" do
       before(:each) do
