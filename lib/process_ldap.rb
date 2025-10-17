@@ -157,4 +157,15 @@ class ProcessLdapOneUser < ProcessLdap
   def filter
     Net::LDAP::Filter.eq("uid", @uniqname)
   end
+
+  def ldap_output
+    ldap.search(
+      base: "ou=People,dc=umich,dc=edu",
+      objectclass: "*",
+      filter: filter,
+      attrs: ldap_attributes
+    ) do |data|
+      @output.write(data)
+    end
+  end
 end
