@@ -99,6 +99,7 @@ class Patron
   end
 
   extend Forwardable
+
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
 
   def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
