@@ -58,17 +58,12 @@ class ProcessLdap
     end
   end
 
-  # DISTINGUISHED_NAME = ENV.fetch("LDAP_DN")
-  # PASSWORD = ENV.fetch("LDAP_PASSWORD")
-  # HOST = ENV.fetch("LDAP_HOST")
-
   def initialize(output: $stdout)
     @output = output
   end
 
   def ldap
     S.ldap
-    # @ldap ||= Net::LDAP.new(host: HOST, auth: {method: :simple, dn: DISTINGUISHED_NAME, password: PASSWORD}, port: 636, encryption: {method: :simple_tls})
   end
 
   def filter
@@ -105,12 +100,6 @@ class ProcessLdap
       else
         puts Patron.exclude_reasons_for(data)
       end
-      # if patron.includable?
-      # @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      # total_loaded += 1
-      # else
-      # puts "#{patron.primary_id}\t#{patron.class}\t#{patron.exclude_reason}"
-      # end
     end
     unless ldap.get_operation_result.code == 0
       puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"
@@ -119,10 +108,6 @@ class ProcessLdap
 
     puts "Total found: #{total_found}"
     puts "Total loaded: #{total_loaded}"
-  end
-
-  def to_s
-    "This is a string!"
   end
 end
 

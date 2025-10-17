@@ -15,13 +15,12 @@ class Patron
       "PN" => "GR"
     }
 
+    def campus_code
+      raise NotImplementedError
+    end
+
     def ldap_campus
       raise NotImplementedError
-      # if campus_code == "UMFL"
-      # "flnt"
-      # else
-      # "dbrn"
-      # end
     end
 
     def term(acad_period)
@@ -69,6 +68,26 @@ class Patron
 
     def exclude_reason
       "not_registered" unless includable?
+    end
+  end
+
+  class DearbornStudent < Patron::RegionalStudent
+    def campus_code
+      "UMDB"
+    end
+
+    def ldap_campus
+      "dbrn"
+    end
+  end
+
+  class FlintStudent < Patron::RegionalStudent
+    def campus_code
+      "UMFL"
+    end
+
+    def ldap_campus
+      "flnt"
     end
   end
 end

@@ -10,23 +10,28 @@ class Patron
       !hr_data.nil?
     end
 
-    def campus_code
-      HR_CAMPUS_MAP[hr_data.campus.downcase]
+    def user_group
+      raise NotImplementedError
     end
 
-    def user_group
-      case role
-      when "faculty"
-        "01"
-      when "staff"
-        "02"
-      when "temporary_staff"
-        "14"
-      when "sponsored_affiliate"
-        "01"
-      when "retiree"
-        "01"
-      end
+    def role
+      raise NotImplementedError
+    end
+
+    def statistic_category
+      raise NotImplementedError
+    end
+
+    def exclude_reason
+      raise NotImplementedError
+    end
+
+    def hr_criteria(hr_item)
+      raise NotImplementedError
+    end
+
+    def campus_code
+      HR_CAMPUS_MAP[hr_data.campus.downcase]
     end
 
     def job_description
@@ -49,14 +54,6 @@ class Patron
       hr = (role == "sponsored_affiliate") ? @data["umichsponsorshipdetail"] : @data[hr_attribute]
       raise if hr.nil? # there always has to be hrdata
       ldap_fields(hr)
-    end
-
-    def exclude_reason
-      raise NotImplementedError
-    end
-
-    def hr_criteria(hr_item)
-      raise NotImplementedError
     end
 
     def hr_filtered
