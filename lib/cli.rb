@@ -15,4 +15,10 @@ class CLI < Thor
   def ldap(uniqname)
     ProcessLdapOneUser.new(uniqname: uniqname).ldap_output
   end
+
+  desc "one UNIQNAME", "returns the xml for the uniqname"
+  def one(uniqname)
+    ProcessLdapOneUser.new(uniqname: uniqname).process
+  end
+
 end

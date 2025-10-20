@@ -78,6 +78,29 @@ class ProcessLdap
     self.class.ldap_attributes
   end
 
+  def search(&block)
+    ldap.search(
+      base: "ou=People,dc=umich,dc=edu",
+      objectclass: "*",
+      filter: filter,
+      attrs: ldap_attributes
+    ) do |data|
+      block.call(data)
+    end
+  end
+
+  def process_one(data)
+    patron = Patron.valid_for(data)
+    if patron
+      #puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
+      @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      nil
+    else
+      puts Patron.exclude_reasons_for(data)
+      return 1
+    end
+  end
+
   # To do: This needs to write to a file
   # The filename needs to be part of the class
   # It can know how to write to a file (or something file like)
@@ -86,23 +109,15 @@ class ProcessLdap
     total_found = 0
     total_loaded = 0
 
-    ldap.search(
-      base: "ou=People,dc=umich,dc=edu",
-      objectclass: "*",
-      filter: filter,
-      attrs: ldap_attributes
-    ) do |data|
+     search do |data|
       #puts data["uid"].first
       total_found += 1
-      patron = Patron.valid_for(data)
-      if patron
-        puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
-        @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-        total_loaded += 1
-      else
-        puts Patron.exclude_reasons_for(data)
+      result = process_one(data)
+      if result.nil?
+        total_loaded +=1
       end
     end
+
     unless ldap.get_operation_result.code == 0
       puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"
       exit
