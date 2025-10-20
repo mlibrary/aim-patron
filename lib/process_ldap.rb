@@ -92,11 +92,13 @@ class ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
-      puts data["uid"].first
+      #puts data["uid"].first
       total_found += 1
       patron = Patron.valid_for(data)
       if patron
+        puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
         @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+        total_loaded += 1
       else
         puts Patron.exclude_reasons_for(data)
       end
@@ -165,7 +167,7 @@ class ProcessLdapOneUser < ProcessLdap
       filter: filter,
       attrs: ldap_attributes
     ) do |data|
-      @output.write(data)
+      @output.write(JSON.pretty_generate(data.to_h))
     end
   end
 end
