@@ -10,7 +10,7 @@ require_relative "patron"
 require_relative "patron_mapper"
 require_relative "current_schedule"
 class ProcessLdap
-  def self.ldap_attributes
+  LDAP_ATTRIBUTES =
     [
       "createtimestamp",
       "modifytimestamp",
@@ -39,27 +39,42 @@ class ProcessLdap
       "umichPermanentPostalAddressData",
       "umichPostalAddressData"
     ]
+
+  ROLES_FILTER = [
+    "StudentDBRN",
+    "StudentFLNT",
+    "StudentAA",
+    "Faculty*",
+    "RegularStaff*",
+    "TemporaryStaffAA",
+    "SponsoredAffiliateAA",
+    "Retiree"
+  ].map do |role|
+    Net::LDAP::Filter.eq("umichInstRoles", role)
+  end.reduce do |main_filter, current_filter|
+    Net::LDAP::Filter.intersect(main_filter, current_filter)
   end
 
-  def self.roles_filter
-    [
-      "StudentDBRN",
-      "StudentFLNT",
-      "StudentAA",
-      "Faculty*",
-      "RegularStaff*",
-      "TemporaryStaffAA",
-      "SponsoredAffiliateAA",
-      "Retiree"
-    ].map do |role|
-      Net::LDAP::Filter.eq("umichInstRoles", role)
-    end.reduce do |main_filter, current_filter|
-      Net::LDAP::Filter.intersect(main_filter, current_filter)
-    end
-  end
+  # def self.roles_filter
+  # [
+  # "StudentDBRN",
+  # "StudentFLNT",
+  # "StudentAA",
+  # "Faculty*",
+  # "RegularStaff*",
+  # "TemporaryStaffAA",
+  # "SponsoredAffiliateAA",
+  # "Retiree"
+  # ].map do |role|
+  # Net::LDAP::Filter.eq("umichInstRoles", role)
+  # end.reduce do |main_filter, current_filter|
+  # Net::LDAP::Filter.intersect(main_filter, current_filter)
+  # end
+  # end
 
-  def initialize(output: $stdout)
+  def initialize(output: $stdout, size: nil)
     @output = output
+    @size = size
   end
 
   def ldap
@@ -67,37 +82,37 @@ class ProcessLdap
   end
 
   def filter
-    roles_filter
+    ROLES_FILTER
   end
 
-  def roles_filter
-    self.class.roles_filter
-  end
-
-  def ldap_attributes
-    self.class.ldap_attributes
-  end
+  # def roles_filter
+  # self.class.roles_filter
+  # end
 
   def search(&block)
-    ldap.search(
+    search_attributes = {
       base: "ou=People,dc=umich,dc=edu",
       objectclass: "*",
       filter: filter,
-      attrs: ldap_attributes
+      attrs: LDAP_ATTRIBUTES
+    }
+    search_attributes[:size] = @size if @size
+    ldap.search(
+      **search_attributes
     ) do |data|
       block.call(data)
     end
   end
 
-  def process_one(data)
-    patron = Patron.valid_for(data)
-    if patron
-      #puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
-      @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      nil
-    else
-      puts Patron.exclude_reasons_for(data)
-      return 1
+  def process_one
+    search do |data|
+      patron = Patron.for(data)
+      if patron.includable?
+        # puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
+        patron.write(@output)
+      else
+        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
+      end
     end
   end
 
@@ -106,25 +121,23 @@ class ProcessLdap
   # It can know how to write to a file (or something file like)
   # Is it a good idea for it to know which file to write to?
   def process
-    total_found = 0
-    total_loaded = 0
-
-     search do |data|
-      #puts data["uid"].first
-      total_found += 1
-      result = process_one(data)
-      if result.nil?
-        total_loaded +=1
+    search do |data|
+      patron = Patron.for(data)
+      if patron.includable?
+        patron.write(@output)
+        # @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      else
+        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
       end
+    rescue => e
+      puts e
+      byebug
     end
 
     unless ldap.get_operation_result.code == 0
       puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"
       exit
     end
-
-    puts "Total found: #{total_found}"
-    puts "Total loaded: #{total_loaded}"
   end
 end
 
@@ -141,13 +154,14 @@ class ProcessLdapDaily < ProcessLdap
   end
 
   def filter
-    Net::LDAP::Filter.join(roles_filter, date_filter)
+    Net::LDAP::Filter.join(ROLES_FILTER, date_filter)
   end
 end
 
 class ProcessLdapModifyDateRange < ProcessLdap
-  def initialize(start_date:, end_date:, output: $stdout)
+  def initialize(start_date:, end_date: start_date, output: $stdout, size: nil)
     @output = output
+    @size = size
     @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z" # just set it to EDT diff from UTC
     @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z" # just set it to EDT diff from UTC
     raise StandardError, "start_date must be before end_date" if DateTime.parse(@start_date) > DateTime.parse(@end_date)
@@ -161,7 +175,7 @@ class ProcessLdapModifyDateRange < ProcessLdap
   end
 
   def filter
-    Net::LDAP::Filter.join(roles_filter, date_filter)
+    Net::LDAP::Filter.join(ROLES_FILTER, date_filter)
   end
 end
 
@@ -169,6 +183,7 @@ class ProcessLdapOneUser < ProcessLdap
   def initialize(uniqname:, output: $stdout)
     @uniqname = uniqname
     @output = output
+    @size = 1
   end
 
   def filter
@@ -176,13 +191,20 @@ class ProcessLdapOneUser < ProcessLdap
   end
 
   def ldap_output
-    ldap.search(
-      base: "ou=People,dc=umich,dc=edu",
-      objectclass: "*",
-      filter: filter,
-      attrs: ldap_attributes
-    ) do |data|
+    search do |data|
       @output.write(JSON.pretty_generate(data.to_h))
+    end
+  end
+
+  def process
+    search do |data|
+      patron = Patron.for(data)
+      if patron.includable?
+        # puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
+        @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
+      else
+        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
+      end
     end
   end
 end

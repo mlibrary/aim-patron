@@ -47,6 +47,10 @@ class Patron
       end
     end
 
+    def sponsor_reason
+      hr_item.umichSponsorReason
+    end
+
     def valid_start_date?(hr_item)
       includable_start_date?(hr_item.umichSponsorStartDate)
     end

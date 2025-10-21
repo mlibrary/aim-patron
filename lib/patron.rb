@@ -8,6 +8,7 @@ require_relative "patron/retiree"
 require_relative "patron/student"
 require_relative "patron/ann_arbor_student"
 require_relative "patron/regional_student"
+require_relative "patron/skipped"
 
 require_relative "patron/name"
 
@@ -20,23 +21,19 @@ class Patron
     end
   end
 
-  def self.valid_for(data)
-    return if test_user?(data)
+  # have this return the valid patron or an invalid one.
+  def self.for(data)
     inst_roles = inst_roles_for(data)
-    result = inst_roles.filter_map do |inst_role|
+    exclude_reasons = []
+    inst_roles.each do |inst_role|
       user = for_inst_role(inst_role: inst_role, data: data)
-      user if user.includable?
+      if user.includable?
+        return user
+      else
+        exclude_reasons.push(user.exclude_reason)
+      end
     end
-    result&.first
-  end
-
-  def self.exclude_reasons_for(data)
-    return ["Uniqname: #{data["uid"].first}\tExclude Reason: test_user"] if test_user?(data)
-    inst_roles = inst_roles_for(data)
-    inst_roles.map do |inst_role|
-      user = for_inst_role(inst_role: inst_role, data: data)
-      "Uniqname: #{user.primary_id}\tInst Role: #{inst_role["key"]}\tExclude Reason: #{user.exclude_reason}"
-    end
+    Skipped.new(data: data, exclude_reasons: exclude_reasons)
   end
 
   def self.test_user?(data)
@@ -71,11 +68,13 @@ class Patron
   extend Forwardable
 
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
+  attr_reader :exclude_reasons
 
   def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
     @data = data
     @name = name
     @current_schedule = current_schedule
+    @exclude_reasons = []
   end
 
   def includable?
@@ -116,6 +115,9 @@ class Patron
 
   def status
     "ACTIVE"
+  end
+
+  def sponsor_reason
   end
 
   def job_description
@@ -258,6 +260,10 @@ class Patron
 
   def to_json
     to_h.to_json
+  end
+
+  def write(file_handle)
+    file_handle.write PatronMapper::User.from_hash(to_h).to_xml(pretty: true)
   end
 
   def ldap_fields(array)
