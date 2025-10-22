@@ -45,8 +45,8 @@ class Report
       patron.campus_code,
       patron.user_group,
       patron.statistic_category,
-      patron.exclude_reasons
-    ].join("\t")
+      #patron.exclude_reasons
+    ].join("\t") + "\n"
   end
 end
 

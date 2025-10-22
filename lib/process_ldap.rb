@@ -90,10 +90,6 @@ class ProcessLdap
     end
   end
 
-  # To do: This needs to write to a file
-  # The filename needs to be part of the class
-  # It can know how to write to a file (or something file like)
-  # Is it a good idea for it to know which file to write to?
   def process
     Report.open(@file_base) do |report|
       write_to_output do |output|

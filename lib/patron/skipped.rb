@@ -11,7 +11,13 @@ class Patron
       false
     end
 
-    def statsitic_category
+    def statistic_category
+    end
+
+    def campus_code
+    end
+
+    def user_group
     end
   end
 end
