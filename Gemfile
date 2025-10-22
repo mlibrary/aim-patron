@@ -6,6 +6,7 @@ gem "net-ldap"
 gem "shale"
 gem "rexml"
 gem "thor"
+gem "yabeda-prometheus"
 
 group :development, :test do
   gem "pry"
