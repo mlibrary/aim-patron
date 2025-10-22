@@ -6,6 +6,7 @@ require "byebug"
 require "csv"
 
 require_relative "services"
+require_relative "report"
 require_relative "patron"
 require_relative "patron_mapper"
 require_relative "current_schedule"
@@ -55,25 +56,8 @@ class ProcessLdap
     Net::LDAP::Filter.intersect(main_filter, current_filter)
   end
 
-  # def self.roles_filter
-  # [
-  # "StudentDBRN",
-  # "StudentFLNT",
-  # "StudentAA",
-  # "Faculty*",
-  # "RegularStaff*",
-  # "TemporaryStaffAA",
-  # "SponsoredAffiliateAA",
-  # "Retiree"
-  # ].map do |role|
-  # Net::LDAP::Filter.eq("umichInstRoles", role)
-  # end.reduce do |main_filter, current_filter|
-  # Net::LDAP::Filter.intersect(main_filter, current_filter)
-  # end
-  # end
-
-  def initialize(output: $stdout, size: nil)
-    @output = output
+  def initialize(output_directory:, base_name:, size: nil)
+    @file_base = File.join(output_directory, base_name)
     @size = size
   end
 
@@ -85,9 +69,11 @@ class ProcessLdap
     ROLES_FILTER
   end
 
-  # def roles_filter
-  # self.class.roles_filter
-  # end
+  def write_to_output(&block)
+    File.open("#{@file_base}.xml", "w") do |output|
+      block.call(output)
+    end
+  end
 
   def search(&block)
     search_attributes = {
@@ -104,34 +90,25 @@ class ProcessLdap
     end
   end
 
-  def process_one
-    search do |data|
-      patron = Patron.for(data)
-      if patron.includable?
-        # puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
-        patron.write(@output)
-      else
-        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
-      end
-    end
-  end
-
   # To do: This needs to write to a file
   # The filename needs to be part of the class
   # It can know how to write to a file (or something file like)
   # Is it a good idea for it to know which file to write to?
   def process
-    search do |data|
-      patron = Patron.for(data)
-      if patron.includable?
-        patron.write(@output)
-        # @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      else
-        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
+    Report.open(@file_base) do |report|
+      write_to_output do |output|
+        search do |data|
+          patron = Patron.for(data)
+          if patron.includable?
+            patron.write(output)
+            report.load(patron)
+          else
+            report.skip(patron)
+          end
+        rescue => e
+          byebug
+        end
       end
-    rescue => e
-      puts e
-      byebug
     end
 
     unless ldap.get_operation_result.code == 0
@@ -142,8 +119,7 @@ class ProcessLdap
 end
 
 class ProcessLdapDaily < ProcessLdap
-  def initialize(date:, output: $stdout)
-    @output = output
+  def initialize(date:)
     @date = DateTime.parse(date).strftime("%Y%m%d") + "050000.0Z" # just set it to EST diff from UTC
   end
 
@@ -159,9 +135,9 @@ class ProcessLdapDaily < ProcessLdap
 end
 
 class ProcessLdapModifyDateRange < ProcessLdap
-  def initialize(start_date:, end_date: start_date, output: $stdout, size: nil)
-    @output = output
+  def initialize(start_date:, output_directory:, base_name:, end_date: start_date, size: nil)
     @size = size
+    @file_base = File.join(output_directory, base_name)
     @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z" # just set it to EDT diff from UTC
     @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z" # just set it to EDT diff from UTC
     raise StandardError, "start_date must be before end_date" if DateTime.parse(@start_date) > DateTime.parse(@end_date)
@@ -180,9 +156,9 @@ class ProcessLdapModifyDateRange < ProcessLdap
 end
 
 class ProcessLdapOneUser < ProcessLdap
-  def initialize(uniqname:, output: $stdout)
+  def initialize(uniqname:)
     @uniqname = uniqname
-    @output = output
+    @output = $stdout
     @size = 1
   end
 
@@ -190,20 +166,14 @@ class ProcessLdapOneUser < ProcessLdap
     Net::LDAP::Filter.eq("uid", @uniqname)
   end
 
-  def ldap_output
-    search do |data|
-      @output.write(JSON.pretty_generate(data.to_h))
-    end
+  def write_to_output(&block)
+    block.call($stdout)
   end
 
-  def process
-    search do |data|
-      patron = Patron.for(data)
-      if patron.includable?
-        # puts "LOAD\t#{patron.umid}\t#{patron.uniqname}"
-        @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      else
-        puts "SKIP\t#{patron.umid}\t#{patron.uniqname}\t#{patron.exclude_reasons.join(";")}"
+  def ldap_output
+    write_to_output do |output|
+      search do |data|
+        output.write(JSON.pretty_generate(data.to_h))
       end
     end
   end

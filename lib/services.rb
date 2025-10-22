@@ -1,6 +1,10 @@
 require "net/ldap"
 module Services
   class << self
+    def project_root
+      @@project_root ||= File.absolute_path(File.join(__dir__, ".."))
+    end
+
     def ldap
       @@ldap ||= init_ldap
     end
@@ -19,6 +23,10 @@ module Services
 
     def ldap_password
       ENV["LDAP_PASSWORD"]
+    end
+
+    def output_directory
+      @@output_directory ||= ENV["OUTPUT_DIRECTORY"] || File.join(project_root, "output")
     end
 
     private
