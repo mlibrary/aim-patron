@@ -21,8 +21,11 @@ class Patron
     end
   end
 
-  # have this return the valid patron or an invalid one.
   def self.for(data)
+    if test_user?(data)
+      return Skipped.new(data: data, exclude_reasons: ["test_user"])
+    end
+
     inst_roles = inst_roles_for(data)
     exclude_reasons = []
     inst_roles.each do |inst_role|
