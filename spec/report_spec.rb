@@ -10,7 +10,7 @@ describe Report do
     Yabeda.reset!
   end
   subject do
-    described_class.new(@file_handle)
+    described_class.new(fh: @file_handle, script_type: "test")
   end
 
   context "#load" do
@@ -25,7 +25,7 @@ describe Report do
     end
     it "increments the counters" do
       subject.load(staff_person)
-      expect(Report.metrics.statistic_category.get(name: "ST")).to eq(1)
+      expect(Report.metrics.statistic_category.get(name: "ST", script_type: "test")).to eq(1)
     end
   end
 end

@@ -95,10 +95,14 @@ class ProcessLdap
     end
   end
 
+  def script_type
+    "full"
+  end
+
   def process
     S.logger.info("start")
     S.logger.info("open files", file_base: @file_base)
-    Report.open(@file_base) do |report|
+    Report.open(file_base: @file_base, script_type: script_type) do |report|
       write_to_output do |output|
         S.logger.info("begin ldap search")
         search do |data|
@@ -111,7 +115,7 @@ class ProcessLdap
           end
           milemarker.increment_and_log_batch_line
         rescue => e
-          Report.metrics.error_total.increment
+          Report.metrics.error.increment({script_type: script_type})
           S.logger.error "process_patrons_error", {uniqname: data["uid"]&.first}, e
         end
       end
@@ -121,7 +125,7 @@ class ProcessLdap
     ldap_result_code = ldap.get_operation_result.code
     if ldap_result_code != 0 && unexpected_size_limit?(ldap_result_code)
       S.logger.error "ldap_error", code: ldap_result_code, message: ldap.get_operation_result.message
-      Report.metrics.error_total.increment
+      Report.metrics.error.increment
     end
 
     puts Report.print_metrics
@@ -136,6 +140,10 @@ end
 class ProcessLdapDaily < ProcessLdap
   def initialize(date:)
     @date = DateTime.parse(date).strftime("%Y%m%d") + "050000.0Z" # just set it to EST diff from UTC
+  end
+
+  def script_type
+    "daily"
   end
 
   def date_filter
@@ -158,6 +166,10 @@ class ProcessLdapModifyDateRange < ProcessLdap
     raise StandardError, "start_date must be before end_date" if DateTime.parse(@start_date) > DateTime.parse(@end_date)
   end
 
+  def script_type
+    "range"
+  end
+
   def date_filter
     modify_start = Net::LDAP::Filter.ge("modifyTimeStamp", @start_date)
     modify_end = Net::LDAP::Filter.le("modifyTimeStamp", @end_date)
@@ -175,6 +187,10 @@ class ProcessLdapOneUser < ProcessLdap
     @uniqname = uniqname
     @output = $stdout
     @size = 1
+  end
+
+  def script_type
+    "one"
   end
 
   def filter
