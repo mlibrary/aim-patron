@@ -4,6 +4,7 @@ require "net/ldap"
 require "date"
 require "byebug"
 require "csv"
+require "milemarker"
 
 require_relative "services"
 require_relative "report"
@@ -75,6 +76,10 @@ class ProcessLdap
     end
   end
 
+  def milemarker
+    @milemarker ||= Milemarker::Structured.new(name: "processing_patrons", batch_size: 1_000, logger: S.logger)
+  end
+
   def search(&block)
     search_attributes = {
       base: "ou=People,dc=umich,dc=edu",
@@ -91,8 +96,11 @@ class ProcessLdap
   end
 
   def process
+    S.logger.info("start")
+    S.logger.info("open files", file_base: @file_base)
     Report.open(@file_base) do |report|
       write_to_output do |output|
+        S.logger.info("begin ldap search")
         search do |data|
           patron = Patron.for(data)
           if patron.includable?
@@ -101,16 +109,27 @@ class ProcessLdap
           else
             report.skip(patron)
           end
+          milemarker.increment_and_log_batch_line
         rescue => e
-          byebug
+          Report.metrics.error_total.increment
+          S.logger.error "process_patrons_error", {uniqname: data["uid"]&.first}, e
         end
       end
     end
+    milemarker.log_final_line
 
-    unless ldap.get_operation_result.code == 0
-      puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"
-      exit
+    ldap_result_code = ldap.get_operation_result.code
+    if ldap_result_code != 0 && unexpected_size_limit?(ldap_result_code)
+      S.logger.error "ldap_error", code: ldap_result_code, message: ldap.get_operation_result.message
+      Report.metrics.error_total.increment
     end
+
+    puts Report.print_metrics
+    S.logger.info("end")
+  end
+
+  def unexpected_size_limit?(ldap_result_code)
+    ldap_result_code == 4 && @size.nil?
   end
 end
 

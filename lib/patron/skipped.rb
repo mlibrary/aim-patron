@@ -11,13 +11,14 @@ class Patron
       false
     end
 
-    def statistic_category
-    end
-
-    def campus_code
-    end
-
-    def user_group
-    end
+    [
+      "campus_code",
+      "email_type",
+      "exclude_reason",
+      "job_description",
+      "statistic_category",
+      "umich_address_type",
+      "user_group"
+    ].each { |method| define_method(method) {} }
   end
 end

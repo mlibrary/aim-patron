@@ -4,6 +4,7 @@ class Report
     Yabeda.configure do
       group :aim_patron_load do
         gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:name]
+        gauge :error_total, comment: "Total number of errors while running the patron load"
       end
     end
     Yabeda.configure!
@@ -11,6 +12,10 @@ class Report
 
   def self.metrics
     Yabeda.aim_patron_load
+  end
+
+  def self.print_metrics
+    Prometheus::Client::Formats::Text.marshal(Yabeda::Prometheus.registry)
   end
 
   def self.open(file_base, &block)
@@ -30,7 +35,7 @@ class Report
 
   def load(patron)
     @fh.write report_string(kind: "LOAD", patron: patron)
-    metrics.statistic_category.increment({name: patron.statistic_category}, by: 1)
+    metrics.statistic_category.increment({name: patron.statistic_category})
   end
 
   def skip(patron)
@@ -44,8 +49,8 @@ class Report
       patron.uniqname,
       patron.campus_code,
       patron.user_group,
-      patron.statistic_category,
-      #patron.exclude_reasons
+      patron.statistic_category
+      # patron.exclude_reasons
     ].join("\t") + "\n"
   end
 end

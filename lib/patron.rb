@@ -80,8 +80,19 @@ class Patron
     @exclude_reasons = []
   end
 
-  def includable?
-    raise NotImplementedError
+  [
+    "campus_code",
+    "email_type",
+    "exclude_reason",
+    "includable?",
+    "job_description",
+    "statistic_category",
+    "umich_address_type",
+    "user_group"
+  ].each do |method|
+    define_method method do
+      raise NotImplementedError, "#{self.class}.#{method}"
+    end
   end
 
   def uniqname
@@ -108,31 +119,11 @@ class Patron
     expiry_date.next_year(2)
   end
 
-  def campus_code
-    raise NotImplementedError
-  end
-
-  def user_group
-    raise NotImplementedError
-  end
-
   def status
     "ACTIVE"
   end
 
   def sponsor_reason
-  end
-
-  def job_description
-    raise NotImplementedError
-  end
-
-  def statistic_category
-    raise NotImplementedError
-  end
-
-  def umich_address_type
-    raise NotImplementedError
   end
 
   def umich_address
@@ -169,10 +160,6 @@ class Patron
 
   def email_address
     @data["mail"]&.first
-  end
-
-  def email_type
-    raise NotImplementedError
   end
 
   def phone_number

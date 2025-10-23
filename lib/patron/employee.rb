@@ -6,23 +6,7 @@ class Patron
       "um_dearborn" => "UMDB"
     }
 
-    def includable?
-      !hr_data.nil?
-    end
-
-    def user_group
-      raise NotImplementedError
-    end
-
     def role
-      raise NotImplementedError
-    end
-
-    def statistic_category
-      raise NotImplementedError
-    end
-
-    def exclude_reason
       raise NotImplementedError
     end
 
@@ -30,20 +14,39 @@ class Patron
       raise NotImplementedError
     end
 
-    def campus_code
-      HR_CAMPUS_MAP[hr_data.campus.downcase]
+    [
+      "statistic_category",
+      "user_group",
+      "exclude_reason"
+    ].each do |method|
+      define_method method do
+        # all of these are NotImplementedError
+        super
+      end
     end
 
-    def job_description
-      "#{hr_data.deptDescription} (#{hr_data.deptId})"
+    def campus_code
+      HR_CAMPUS_MAP[hr_data.campus.downcase]
     end
 
     def email_type
       "work"
     end
 
+    def exclude_reason
+      raise NotImplementedError
+    end
+
+    def includable?
+      !hr_data.nil?
+    end
+
     def umich_address_type
       "work"
+    end
+
+    def job_description
+      "#{hr_data.deptDescription} (#{hr_data.deptId})"
     end
 
     def hr_attribute

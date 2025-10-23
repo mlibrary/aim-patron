@@ -15,12 +15,43 @@ class Patron
       "PN" => "GR"
     }
 
+    def ldap_campus
+      raise NotImplementedError
+    end
+
     def campus_code
       raise NotImplementedError
     end
 
-    def ldap_campus
-      raise NotImplementedError
+    def exclude_reason
+      "not_registered" unless includable?
+    end
+
+    def includable?
+      current_term_status.any? do |term|
+        term.registered == "Y" && @current_schedule.includable_term?(term(term.academicPeriod))
+      end
+    end
+
+    def job_description
+      current_term_status.map do |term|
+        term.programDesc
+      end.compact.first
+    end
+
+    def statistic_category
+      current_term_status.map do |term|
+        CLASS_STANDING_STATISTIC_CATEGORY_MAP[term.classStanding]
+      end.compact.first
+    end
+
+    def user_group
+      case statistic_category
+      when "UN"
+        "04"
+      when "GR"
+        "03"
+      end
     end
 
     def term(acad_period)
@@ -35,59 +66,28 @@ class Patron
       "#{semester}#{year}"
     end
 
-    def user_group
-      case statistic_category
-      when "UN"
-        "04"
-      when "GR"
-        "03"
-      end
-    end
-
-    def statistic_category
-      current_term_status.map do |term|
-        CLASS_STANDING_STATISTIC_CATEGORY_MAP[term.classStanding]
-      end.compact.first
-    end
-
     def current_term_status
       ldap_fields(@data["umich#{ldap_campus}currenttermstatus"] || [])
-    end
-
-    def job_description
-      current_term_status.map do |term|
-        term.programDesc
-      end.compact.first
-    end
-
-    def includable?
-      current_term_status.any? do |term|
-        term.registered == "Y" && @current_schedule.includable_term?(term(term.academicPeriod))
-      end
-    end
-
-    def exclude_reason
-      "not_registered" unless includable?
     end
   end
 
   class DearbornStudent < Patron::RegionalStudent
-    def campus_code
-      "UMDB"
-    end
-
     def ldap_campus
       "dbrn"
+    end
+
+    def campus_code
+      "UMDB"
     end
   end
 
   class FlintStudent < Patron::RegionalStudent
-    def campus_code
-      "UMFL"
-    end
-
     def ldap_campus
       "flnt"
+    end
+
+    def campus_code
+      "UMFL"
     end
   end
 end
