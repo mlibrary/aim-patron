@@ -22,8 +22,13 @@ class Report
   end
 
   def self.open(file_base:, script_type:, &block)
-    File.open("#{file_base}.tsv", "w") do |fh|
-      report = Report.new(fh: fh, script_type: script_type)
+    if file_base
+      File.open("#{file_base}.tsv", "w") do |fh|
+        report = Report.new(fh: fh, script_type: script_type)
+        block.call(report)
+      end
+    else
+      report = Report.new(fh: $stdout, script_type: script_type)
       block.call(report)
     end
   end

@@ -101,7 +101,7 @@ class ProcessLdap
 
   def process
     S.logger.info("start")
-    S.logger.info("open files", file_base: @file_base)
+    S.logger.info("open files", file_base: @file_base) if @file_base
     Report.open(file_base: @file_base, script_type: script_type) do |report|
       write_to_output do |output|
         S.logger.info("begin ldap search")

@@ -33,6 +33,7 @@ class Patron
       if user.includable?
         return user
       else
+        S.logger.debug("exclude_reason", {uniqname: user.uniqname, reason: user.exclude_reason, inst_role: inst_role})
         exclude_reasons.push(user.exclude_reason)
       end
     end
