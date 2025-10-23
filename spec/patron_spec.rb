@@ -97,6 +97,16 @@ describe Patron do
         @patron["umichhomepostaladdressdata"].push(second_home_address)
       end
 
+      # This happend. Someone had "(Box=SomeNumber)" in their address 3
+      it "handles values with an equal sign" do
+        @patron["umichpostaladdressdata"][0] = @patron["umichpostaladdressdata"][0].sub("-", "=")
+        expect(staff_person.umich_address.line1).to eq("Library Info Tech = AIM")
+      end
+
+      it "returns a (no address) if there's nothing after =" do
+        @patron["umichpostaladdressdata"][0] = @patron["umichpostaladdressdata"][0].split("=")[0]
+        expect(staff_person.umich_address.line1).to eq("(no address)")
+      end
       it "returns a umichpostaladdressdata if it exists" do
         expect(staff_person.umich_address.line1).to eq("Library Info Tech - AIM")
       end

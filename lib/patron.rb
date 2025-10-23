@@ -263,11 +263,15 @@ class Patron
   end
 
   def ldap_field(row)
-    OpenStruct.new(row.split("}:").map do |element|
+    parsed_field = row.split("}:").map do |element|
       array = element.gsub(/["{}]/, "").split("=")
-      array[1] = nil if array.length == 1
-      array
-    end.to_h)
+      if array.length == 1
+        [array[0], nil]
+      else
+        [array[0], array&.slice(1..-1)&.join("=")]
+      end
+    end
+    OpenStruct.new(parsed_field.to_h)
   end
 
   class Address
