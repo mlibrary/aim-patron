@@ -1,35 +1,35 @@
-# LDAP to Alma Patrons
+# AIM Patron
 
-Alma requires a regular load of users from a student information system (SIS). For Umich that SIS is ActiveDirectory/LDAP. This codebase transforms users from Umich's ActiveDirectory/LDAP system into users that Alma can use. 
+Alma requires a regular load of users from a student information system (SIS).
+For Michigan that SIS is ActiveDirectory/LDAP. This codebase transforms users
+from Umich's ActiveDirectory/LDAP system into users that Alma can use. 
 
 ## Developer Setup
 
 Clone the Repository
 
 ```
-git clone git@github.com:mlibrary/ldap-to-alma-patrons.git
-cd ldap-to-alma-patrons
+git clone git@github.com:mlibrary/aim-patron.git
+cd aim-patron
 ```
 
-copy .env-example to .env
+run the init script
 
 ```
-cp .env-example .env
+./init.sh
 ```
 
 edit .env with actual environment variables; ask a developer if you need them
 
-build container
-```
-docker-compose build
-```
-
-bundle install
-```
-docker-compose run --rm web bundle install
-```
-
 To run the tests:
 ```
-docker-compose run --rm web bundle exec rspec
+docker-compose run --rm app bundle exec rspec
+```
+
+## Run the scripts locally
+
+To run the aim-patron CLI locally do:
+
+```
+docker-compose run --rm app patron help
 ```
