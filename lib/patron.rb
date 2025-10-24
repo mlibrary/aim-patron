@@ -191,8 +191,8 @@ class Patron
       "user_group" => user_group,
       "status" => status,
       # "status_date" => status_date, not a thing in alma????
-      "expiry_date" => expiry_date.strftime("%D"),
-      "purge_date" => purge_date.strftime("%D"),
+      "expiry_date" => expiry_date.strftime("%F"),
+      "purge_date" => purge_date.strftime("%F"),
       "job_description" => job_description,
       "user_statistics" => {
         "user_statistic" => {

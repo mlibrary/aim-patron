@@ -72,7 +72,10 @@ class ProcessLdap
 
   def write_to_output(&block)
     File.open("#{@file_base}.xml", "w") do |output|
+      output.write "<?xml version=\"1.0\"?>\n"
+      output.write "<users>\n"
       block.call(output)
+      output.write "</users>"
     end
   end
 
