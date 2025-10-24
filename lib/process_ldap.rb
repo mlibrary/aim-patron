@@ -100,6 +100,7 @@ class ProcessLdap
   end
 
   def process
+    start = Time.now
     S.logger.info("start")
     S.logger.info("open files", file_base: @file_base) if @file_base
     Report.open(file_base: @file_base, script_type: script_type) do |report|
@@ -127,8 +128,9 @@ class ProcessLdap
       S.logger.error "ldap_error", code: ldap_result_code, message: ldap.get_operation_result.message
       Report.metrics.error.increment
     end
-
+    Report.metrics.job_duration_seconds.set({script_type: script_type}, Time.now - start)
     puts Report.print_metrics
+    Report.push_metrics
     S.logger.info("end")
   end
 

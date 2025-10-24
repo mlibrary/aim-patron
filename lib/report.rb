@@ -1,4 +1,5 @@
 require "yabeda/prometheus"
+require "uri"
 class Report
   def self.configure_yabeda!
     Yabeda.configure do
@@ -8,6 +9,7 @@ class Report
         gauge :found, comment: "Number of found patrons", tags: [:script_type]
         gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:script_type, :name]
         gauge :error, comment: "Number of errors encountered while running the patron load", tags: [:script_type]
+        gauge :job_duration_seconds, comment: "Number of seconds it took to run the patron load job", tags: [:script_type]
       end
     end
     Yabeda.configure!
@@ -19,6 +21,16 @@ class Report
 
   def self.print_metrics
     Prometheus::Client::Formats::Text.marshal(Yabeda::Prometheus.registry)
+  end
+
+  def self.push_metrics
+    # The env var needs to be set to the push gateway url
+    if ENV["PROMETHEUS_PUSH_GATEWAY"]&.match?(URI::DEFAULT_PARSER.make_regexp)
+      Yabeda::Prometheus.push_gateway.add(Yabeda::Prometheus.registry)
+      S.logger.info("Metrics sent to the push gateway")
+    else
+      S.logger.warn("PROMETHEUS_PUSH_GATEWAY env var not set. Metrics not sent to the push gateway")
+    end
   end
 
   def self.open(file_base:, script_type:, &block)
