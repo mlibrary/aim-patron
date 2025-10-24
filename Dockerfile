@@ -18,12 +18,12 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
 RUN groupadd -g ${GID} -o app
 RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
 
-ENV GEM_HOME=/gems
+ENV GEM_HOME="/gems"
 ENV PATH="$PATH:/gems/bin:/app/exe"
 RUN mkdir -p /gems && chown ${UID}:${GID} /gems
 
 
-ENV BUNDLE_PATH /app/vendor/bundle
+ENV BUNDLE_PATH="/app/vendor/bundle"
 
 # Change to app and back so that bundler created files in /gems are owned by the
 # app user
@@ -56,7 +56,5 @@ FROM base AS production
 ENV BUNDLE_WITHOUT=development:test
 
 COPY --chown=${UID}:${GID} . /app
-
-USER app
 
 RUN bundle install

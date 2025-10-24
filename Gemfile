@@ -8,10 +8,7 @@ gem "rexml"
 gem "thor"
 gem "yabeda-prometheus"
 gem "semantic_logger"
-
-gem "milemarker",
-  git: "https://github.com/niquerio/milemarker",
-  branch: "add-logger-to-runtime-dependencies"
+gem "milemarker"
 
 group :development, :test do
   gem "pry"

@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/niquerio/milemarker
-  revision: ce3cf65886015c08e9467254a0a9670f00abfc4b
-  branch: add-logger-to-runtime-dependencies
-  specs:
-    milemarker (1.0.1)
-      logger
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -24,8 +16,8 @@ GEM
     json (2.15.1)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
-    logger (1.7.0)
     method_source (1.1.0)
+    milemarker (1.0.1)
     net-ldap (0.20.0)
       base64
       ostruct
@@ -122,7 +114,7 @@ DEPENDENCIES
   base64
   byebug
   csv
-  milemarker!
+  milemarker
   net-ldap
   pry
   rack-test
