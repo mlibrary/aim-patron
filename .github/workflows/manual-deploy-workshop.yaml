@@ -1,18 +1,18 @@
-name: Docker Build Main and Deploy to Workshop
+name: Manual Deploy to Workshop
 
 on:
-  workflow_run:
-    workflows: [ 'Run Tests' ]
-    branches: [ main ]
-    types: [ completed ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: tag
+        required: true
 
 jobs:
   build-unstable:
-    name: Build unstable ${{ github.sha }}
     uses: mlibrary/platform-engineering-workflows/.github/workflows/build-unstable.yml@v1
     with:
       image_name: ${{ vars.IMAGE_NAME }}
-      tag: ${{ github.sha }}
+      tag: ${{ github.event.inputs.tag }}
       dockerfile: Dockerfile
     secrets: inherit
 

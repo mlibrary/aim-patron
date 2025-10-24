@@ -1,0 +1,27 @@
+name: Manual Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: tag
+        required: true
+
+
+jobs:
+  build-production:
+    uses: mlibrary/platform-engineering-workflows/.github/workflows/build-production.yml@v1
+    with:
+      image_name: ${{ vars.IMAGE_NAME }}
+      tag: ${{ github.event.inputs.tag }}
+      dockerfile: Dockerfile
+    secrets: inherit
+
+  deploy-production-default:
+    needs: build-production
+    name: Deploy to production - default
+    uses: mlibrary/platform-engineering-workflows/.github/workflows/deploy.yml@v1
+    with:
+      image: ghcr.io/mlibrary/${{ vars.IMAGE_NAME }}:${{ github.event.inputs.tag }}
+      file: environments/default/production/patron-image.txt
+    secrets: inherit
