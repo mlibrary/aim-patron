@@ -32,11 +32,11 @@ class Patron
 
     def hr_criteria(hr_item)
       # this will need to be changed to exclude UROP deptDescription
-      (valid_sponsor_reason?(hr_item) && hr_item.deptDescription != "LSA UG: UROP" && valid_start_date?(hr_item) && valid_end_date?(hr_item)) || new_hire_or_temporary_staff?
+      (valid_sponsor_reason?(hr_item) || new_hire_or_temporary_staff?) && hr_item.deptDescription != "LSA UG: UROP" && valid_start_date?(hr_item) && valid_end_date?(hr_item)
     end
 
     def exclude_reason
-      if hr_list.none? { |x| valid_sponsor_reason?(x) }
+      if hr_list.none? { |x| valid_sponsor_reason?(x) || new_hire_or_temporary_staff? }
         "invalid_sponsor_reason"
       elsif hr_list.none? { |x| not_in_urop?(x) }
         "in_urop"
@@ -45,6 +45,10 @@ class Patron
       elsif hr_list.none? { |x| valid_end_date?(x) }
         "end_date_in_the_past"
       end
+    end
+
+    def sponsor_reason
+      hr_item.umichSponsorReason
     end
 
     def valid_start_date?(hr_item)

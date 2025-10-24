@@ -4,6 +4,7 @@
 coverage
 .byebug_history
 .irb_history
-scratch/*.xml
-scratch/*.zip
+output/*.xml
+output/*.tsv
+output/*.zip
 vendor/

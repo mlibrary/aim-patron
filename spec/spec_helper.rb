@@ -19,7 +19,7 @@ require "byebug"
 # require 'webmock/rspec'
 require "simplecov"
 SimpleCov.start
-
+ENV["APP_ENV"] = "test"
 require File.expand_path "../../lib/process_ldap.rb", __FILE__
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

@@ -14,8 +14,19 @@ describe Patron do
     # this is static
     expect(subject.record_type).to eq("PUBLIC")
   end
-  it "returns not implemented error for includable?" do
-    expect { subject.includable? }.to raise_error(NotImplementedError)
+  [
+    "campus_code",
+    "email_type",
+    "exclude_reason",
+    "includable?",
+    "job_description",
+    "statistic_category",
+    "umich_address_type",
+    "user_group"
+  ].each do |method|
+    it "returns not implemented error for #{method}" do
+      expect { subject.public_send(method) }.to raise_error(NotImplementedError)
+    end
   end
   it "returns external_id" do
     # this is static
@@ -35,15 +46,6 @@ describe Patron do
   end
   it "returns true if a middle name exists" do
     expect(subject.middle_name?).to eq(true)
-  end
-  it "returns not implemented error for campus_code" do
-    expect { subject.campus_code }.to raise_error(NotImplementedError)
-  end
-  it "returns not implemented error for user_group" do
-    expect { subject.campus_code }.to raise_error(NotImplementedError)
-  end
-  it "returns not implemented error for email_type" do
-    expect { subject.email_type }.to raise_error(NotImplementedError)
   end
   it "returns an email_address" do
     expect(subject.email_address).to eq("emcard@umich.edu")
@@ -72,12 +74,6 @@ describe Patron do
   it "returns a purge_date from currentschedule" do
     expect(subject.purge_date).to eq(Date.parse("2024-01-31"))
   end
-  it "returns not implemented error for job_description" do
-    expect { subject.job_description }.to raise_error(NotImplementedError)
-  end
-  it "returns not implemented error for statistic_category" do
-    expect { subject.statistic_category }.to raise_error(NotImplementedError)
-  end
   context "#umid" do
     it "returns an object with the correct values" do
       expect(subject.umid.id_type).to eq("02")
@@ -101,6 +97,16 @@ describe Patron do
         @patron["umichhomepostaladdressdata"].push(second_home_address)
       end
 
+      # This happend. Someone had "(Box=SomeNumber)" in their address 3
+      it "handles values with an equal sign" do
+        @patron["umichpostaladdressdata"][0] = @patron["umichpostaladdressdata"][0].sub("-", "=")
+        expect(staff_person.umich_address.line1).to eq("Library Info Tech = AIM")
+      end
+
+      it "returns a (no address) if there's nothing after =" do
+        @patron["umichpostaladdressdata"][0] = @patron["umichpostaladdressdata"][0].split("=")[0]
+        expect(staff_person.umich_address.line1).to eq("(no address)")
+      end
       it "returns a umichpostaladdressdata if it exists" do
         expect(staff_person.umich_address.line1).to eq("Library Info Tech - AIM")
       end

@@ -4,13 +4,15 @@ require "net/ldap"
 require "date"
 require "byebug"
 require "csv"
+require "milemarker"
 
 require_relative "services"
+require_relative "report"
 require_relative "patron"
 require_relative "patron_mapper"
 require_relative "current_schedule"
 class ProcessLdap
-  def self.ldap_attributes
+  LDAP_ATTRIBUTES =
     [
       "createtimestamp",
       "modifytimestamp",
@@ -39,27 +41,25 @@ class ProcessLdap
       "umichPermanentPostalAddressData",
       "umichPostalAddressData"
     ]
+
+  ROLES_FILTER = [
+    "StudentDBRN",
+    "StudentFLNT",
+    "StudentAA",
+    "Faculty*",
+    "RegularStaff*",
+    "TemporaryStaffAA",
+    "SponsoredAffiliateAA",
+    "Retiree"
+  ].map do |role|
+    Net::LDAP::Filter.eq("umichInstRoles", role)
+  end.reduce do |main_filter, current_filter|
+    Net::LDAP::Filter.intersect(main_filter, current_filter)
   end
 
-  def self.roles_filter
-    [
-      "StudentDBRN",
-      "StudentFLNT",
-      "StudentAA",
-      "Faculty*",
-      "RegularStaff*",
-      "TemporaryStaffAA",
-      "SponsoredAffiliateAA",
-      "Retiree"
-    ].map do |role|
-      Net::LDAP::Filter.eq("umichInstRoles", role)
-    end.reduce do |main_filter, current_filter|
-      Net::LDAP::Filter.intersect(main_filter, current_filter)
-    end
-  end
-
-  def initialize(output: $stdout)
-    @output = output
+  def initialize(output_directory:, base_name:, size: nil)
+    @file_base = File.join(output_directory, base_name)
+    @size = size
   end
 
   def ldap
@@ -67,54 +67,87 @@ class ProcessLdap
   end
 
   def filter
-    roles_filter
+    ROLES_FILTER
   end
 
-  def roles_filter
-    self.class.roles_filter
+  def write_to_output(&block)
+    File.open("#{@file_base}.xml", "w") do |output|
+      block.call(output)
+    end
   end
 
-  def ldap_attributes
-    self.class.ldap_attributes
+  def milemarker
+    @milemarker ||= Milemarker::Structured.new(name: "processing_patrons", batch_size: 1_000, logger: S.logger)
   end
 
-  # To do: This needs to write to a file
-  # The filename needs to be part of the class
-  # It can know how to write to a file (or something file like)
-  # Is it a good idea for it to know which file to write to?
-  def process
-    total_found = 0
-    total_loaded = 0
-
-    ldap.search(
+  def search(&block)
+    search_attributes = {
       base: "ou=People,dc=umich,dc=edu",
       objectclass: "*",
       filter: filter,
-      attrs: ldap_attributes
+      attrs: LDAP_ATTRIBUTES
+    }
+    search_attributes[:size] = @size if @size
+    ldap.search(
+      **search_attributes
     ) do |data|
-      puts data["uid"].first
-      total_found += 1
-      patron = Patron.valid_for(data)
-      if patron
-        @output.write PatronMapper::User.from_hash(patron.to_h).to_xml(pretty: true)
-      else
-        puts Patron.exclude_reasons_for(data)
+      block.call(data)
+    end
+  end
+
+  def script_type
+    "full"
+  end
+
+  def process
+    start = Time.now
+    S.logger.info("start")
+    S.logger.info("open files", file_base: @file_base) if @file_base
+    Report.open(file_base: @file_base, script_type: script_type) do |report|
+      write_to_output do |output|
+        S.logger.info("begin ldap search")
+        search do |data|
+          patron = Patron.for(data)
+          if patron.includable?
+            patron.write(output)
+            report.load(patron)
+          else
+            report.skip(patron)
+          end
+          milemarker.increment_and_log_batch_line
+        rescue => e
+          Report.metrics.error.increment({script_type: script_type})
+          S.logger.error "process_patrons_error", {uniqname: data["uid"]&.first}, e
+        end
       end
     end
-    unless ldap.get_operation_result.code == 0
-      puts "Response Code: #{ldap.get_operation_result.code}, Message: #{ldap.get_operation_result.message}"
-      exit
-    end
+    milemarker.log_final_line
 
-    puts "Total found: #{total_found}"
-    puts "Total loaded: #{total_loaded}"
+    ldap_result_code = ldap.get_operation_result.code
+    if ldap_result_code != 0 && unexpected_size_limit?(ldap_result_code)
+      S.logger.error "ldap_error", code: ldap_result_code, message: ldap.get_operation_result.message
+      Report.metrics.error.increment
+    end
+    Report.metrics.job_duration_seconds.set({script_type: script_type}, Time.now - start)
+    puts Report.print_metrics
+    Report.push_metrics
+    S.logger.info("end")
+  end
+
+  def unexpected_size_limit?(ldap_result_code)
+    ldap_result_code == 4 && @size.nil?
   end
 end
 
 class ProcessLdapDaily < ProcessLdap
-  def initialize(date:, output: $stdout)
-    @output = output
-    @date = DateTime.parse(date).strftime("%Y%m%d") + "050000.0Z" # just set it to EST diff from UTC
+  def initialize(date:, output_directory:, base_name:, size: nil)
+    @size = size
+    @file_base = File.join(output_directory, base_name)
+    @date = DateTime.parse(date).strftime("%Y%m%d") + "000000Z"
+  end
+
+  def script_type
+    "daily"
   end
 
   def date_filter
@@ -124,16 +157,21 @@ class ProcessLdapDaily < ProcessLdap
   end
 
   def filter
-    Net::LDAP::Filter.join(roles_filter, date_filter)
+    Net::LDAP::Filter.join(ROLES_FILTER, date_filter)
   end
 end
 
 class ProcessLdapModifyDateRange < ProcessLdap
-  def initialize(start_date:, end_date:, output: $stdout)
-    @output = output
-    @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z" # just set it to EDT diff from UTC
-    @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z" # just set it to EDT diff from UTC
+  def initialize(start_date:, output_directory:, base_name:, end_date: start_date, size: nil)
+    @size = size
+    @file_base = File.join(output_directory, base_name)
+    @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z"
+    @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z"
     raise StandardError, "start_date must be before end_date" if DateTime.parse(@start_date) > DateTime.parse(@end_date)
+  end
+
+  def script_type
+    "range"
   end
 
   def date_filter
@@ -144,17 +182,34 @@ class ProcessLdapModifyDateRange < ProcessLdap
   end
 
   def filter
-    Net::LDAP::Filter.join(roles_filter, date_filter)
+    Net::LDAP::Filter.join(ROLES_FILTER, date_filter)
   end
 end
 
 class ProcessLdapOneUser < ProcessLdap
-  def initialize(uniqname:, output: $stdout)
+  def initialize(uniqname:)
     @uniqname = uniqname
-    @output = output
+    @output = $stdout
+    @size = 1
+  end
+
+  def script_type
+    "one"
   end
 
   def filter
     Net::LDAP::Filter.eq("uid", @uniqname)
+  end
+
+  def write_to_output(&block)
+    block.call($stdout)
+  end
+
+  def ldap_output
+    write_to_output do |output|
+      search do |data|
+        output.write(JSON.pretty_generate(data.to_h))
+      end
+    end
   end
 end

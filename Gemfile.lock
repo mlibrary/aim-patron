@@ -1,17 +1,30 @@
+GIT
+  remote: https://github.com/niquerio/milemarker
+  revision: ce3cf65886015c08e9467254a0a9670f00abfc4b
+  branch: add-logger-to-runtime-dependencies
+  specs:
+    milemarker (1.0.1)
+      logger
+
 GEM
   remote: https://rubygems.org/
   specs:
+    anyway_config (2.7.2)
+      ruby-next-core (~> 1.0)
     ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (3.3.1)
     byebug (12.0.0)
     coderay (1.1.3)
+    concurrent-ruby (1.3.5)
     csv (3.3.5)
     diff-lcs (1.6.2)
     docile (1.4.1)
+    dry-initializer (3.2.0)
     json (2.15.1)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
+    logger (1.7.0)
     method_source (1.1.0)
     net-ldap (0.20.0)
       base64
@@ -22,6 +35,8 @@ GEM
       ast (~> 2.4.1)
       racc
     prism (1.6.0)
+    prometheus-client (4.2.5)
+      base64
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -63,7 +78,10 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
+    ruby-next-core (1.1.2)
     ruby-progressbar (1.13.0)
+    semantic_logger (4.17.0)
+      concurrent-ruby (~> 1.0)
     shale (1.2.2)
       bigdecimal
     simplecov (0.22.0)
@@ -84,9 +102,18 @@ GEM
     standard-performance (1.8.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.25.0)
+    thor (1.4.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
+    yabeda (0.14.0)
+      anyway_config (>= 1.0, < 3)
+      concurrent-ruby
+      dry-initializer
+    yabeda-prometheus (0.9.1)
+      prometheus-client (>= 3.0, < 5.0)
+      rack
+      yabeda (~> 0.10)
 
 PLATFORMS
   x86_64-linux
@@ -95,14 +122,18 @@ DEPENDENCIES
   base64
   byebug
   csv
+  milemarker!
   net-ldap
   pry
   rack-test
   rexml
   rspec
+  semantic_logger
   shale
   simplecov
   standard
+  thor
+  yabeda-prometheus
 
 BUNDLED WITH
    2.7.2
