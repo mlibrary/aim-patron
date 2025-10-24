@@ -138,8 +138,10 @@ class ProcessLdap
 end
 
 class ProcessLdapDaily < ProcessLdap
-  def initialize(date:)
-    @date = DateTime.parse(date).strftime("%Y%m%d") + "050000.0Z" # just set it to EST diff from UTC
+  def initialize(date:, output_directory:, base_name:, size: nil)
+    @size = size
+    @file_base = File.join(output_directory, base_name)
+    @date = DateTime.parse(date).strftime("%Y%m%d") + "000000Z"
   end
 
   def script_type
@@ -161,8 +163,8 @@ class ProcessLdapModifyDateRange < ProcessLdap
   def initialize(start_date:, output_directory:, base_name:, end_date: start_date, size: nil)
     @size = size
     @file_base = File.join(output_directory, base_name)
-    @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z" # just set it to EDT diff from UTC
-    @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z" # just set it to EDT diff from UTC
+    @start_date = DateTime.parse(start_date).strftime("%Y%m%d") + "000000Z"
+    @end_date = DateTime.parse(end_date).strftime("%Y%m%d") + "235959Z"
     raise StandardError, "start_date must be before end_date" if DateTime.parse(@start_date) > DateTime.parse(@end_date)
   end
 
