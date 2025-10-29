@@ -20,13 +20,14 @@ describe Report do
       expect(@file_handle.string).to include("emcard")
       expect(@file_handle.string).to include("99991111")
       expect(@file_handle.string).to include("UMAA")
-      expect(@file_handle.string).to include("02")
+      expect(@file_handle.string).to include("staff")
       expect(@file_handle.string).to include("ST")
     end
     it "increments the counters" do
       subject.load(staff_person)
       expect(Report.metrics.statistic_category.get(name: "ST", script_type: "test")).to eq(1)
       expect(Report.metrics.patron_kind.get(name: "staff_person", script_type: "test")).to eq(1)
+      expect(Report.metrics.user_group.get(name: "staff", script_type: "test")).to eq(1)
     end
   end
 end

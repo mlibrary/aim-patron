@@ -96,10 +96,6 @@ class Patron
     end
   end
 
-  def kind
-    to_snake(self.class.name.split("::").last)
-  end
-
   def uniqname
     @data["uid"]&.first
   end
@@ -324,13 +320,5 @@ class Patron
       hash["address_types"] = {"address_type" => type}
       hash
     end
-  end
-
-  private
-
-  def to_snake(str)
-    str.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-      .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-      .downcase
   end
 end

@@ -1,5 +1,6 @@
 require "yabeda/prometheus"
 require "uri"
+require "forwardable"
 class Report
   def self.configure_yabeda!
     Yabeda.configure do
@@ -8,6 +9,7 @@ class Report
         gauge :skipped, comment: "Number of skipped patrons", tags: [:script_type]
         gauge :found, comment: "Number of found patrons", tags: [:script_type]
         gauge :patron_kind, comment: "Number of patrons in a given major category", tags: [:script_type, :name]
+        gauge :user_group, comment: "Number of patrons in a given Alma User Group", tags: [:script_type, :name]
         gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:script_type, :name]
         gauge :error, comment: "Number of errors encountered while running the patron load", tags: [:script_type]
         gauge :job_duration_seconds, comment: "Number of seconds it took to run the patron load job", tags: [:script_type]
@@ -56,11 +58,14 @@ class Report
   end
 
   def load(patron)
+    patron = Patron.new(patron)
     @fh.write report_string(kind: "LOAD", patron: patron)
     metrics.found.increment({script_type: @script_type})
     metrics.loaded.increment({script_type: @script_type})
-    metrics.statistic_category.increment({script_type: @script_type, name: patron.statistic_category})
-    metrics.patron_kind.increment({script_type: @script_type, name: patron.kind})
+
+    ["patron_kind", "statistic_category", "user_group"].each do |metric|
+      increment_metric(metric, patron)
+    end
   end
 
   def skip(patron)
@@ -79,6 +84,44 @@ class Report
       patron.statistic_category
       # patron.exclude_reasons
     ].join("\t") + "\n"
+  end
+
+  def increment_metric(metric, patron)
+    metrics.public_send(metric).increment({script_type: @script_type, name: patron.public_send(metric)})
+  end
+
+  class Patron
+    extend Forwardable
+
+    def_delegators :@patron, :umid, :uniqname, :campus_code, :statistic_category
+
+    USER_GROUP_MAP = {
+      "01" => "faculty",
+      "02" => "staff",
+      "03" => "graduate",
+      "04" => "undergraduate",
+      "14" => "temporary_staff"
+    }
+
+    def initialize(patron)
+      @patron = patron
+    end
+
+    def user_group
+      USER_GROUP_MAP[@patron.user_group] || @patron.user_group
+    end
+
+    def patron_kind
+      to_snake(@patron.class.name.split("::").last)
+    end
+
+    private
+
+    def to_snake(str)
+      str.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+        .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+        .downcase
+    end
   end
 end
 
