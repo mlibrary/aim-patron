@@ -71,11 +71,13 @@ class ProcessLdap
   end
 
   def write_to_output(&block)
-    File.open("#{@file_base}.xml", "w") do |output|
-      output.write "<?xml version=\"1.0\"?>\n"
-      output.write "<users>\n"
-      block.call(output)
-      output.write "</users>"
+    Yabeda.with_tags(script_type: script_type) do
+      File.open("#{@file_base}.xml", "w") do |output|
+        output.write "<?xml version=\"1.0\"?>\n"
+        output.write "<users>\n"
+        block.call(output)
+        output.write "</users>"
+      end
     end
   end
 
@@ -106,7 +108,7 @@ class ProcessLdap
     start = Time.now
     S.logger.info("start")
     S.logger.info("open files", file_base: @file_base) if @file_base
-    Report.open(file_base: @file_base, script_type: script_type) do |report|
+    Report.open(@file_base) do |report|
       write_to_output do |output|
         S.logger.info("begin ldap search")
         search do |data|

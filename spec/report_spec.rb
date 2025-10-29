@@ -21,7 +21,7 @@ describe Report do
     Yabeda.reset!
   end
   subject do
-    described_class.new(fh: @file_handle, script_type: "test")
+    described_class.new(@file_handle)
   end
 
   it "includes a header with all of the column names" do
@@ -79,16 +79,12 @@ describe Report do
     it "is incremeneted when user a user is a test user" do
       test_user = staff_data
       test_user["uid"] = ["ststv"]
-      Yabeda.with_tags(script_type: "test") do
-        Patron.for(test_user)
-      end
+      Patron.for(test_user)
       expect(Report.metrics.exclude_reason.get(name: "test_user", script_type: "test")).to eq(1)
     end
     it "is incremented when a user is skipped for some other reason" do
       staff_data["umichhr"][0].sub!("jobCategory=Staff", "jobCateogry=INVALID")
-      Yabeda.with_tags(script_type: "test") do
-        Patron.for(staff_data)
-      end
+      Patron.for(staff_data)
       expect(Report.metrics.exclude_reason.get(name: "job_category_not_staff", script_type: "test")).to eq(1)
     end
   end
