@@ -23,7 +23,9 @@ class Patron
 
   def self.for(data)
     if test_user?(data)
-      return Skipped.new(data: data, exclude_reasons: ["test_user"])
+      reason = "test_user"
+      Report.metrics.exclude_reason.increment({name: reason})
+      return Skipped.new(data: data, exclude_reasons: [reason])
     end
 
     inst_roles = inst_roles_for(data)
@@ -34,6 +36,7 @@ class Patron
         return user
       else
         S.logger.debug("exclude_reason", {uniqname: user.uniqname, reason: user.exclude_reason, inst_role: inst_role})
+        Report.metrics.exclude_reason.increment({name: user.exclude_reason})
         exclude_reasons.push(user.exclude_reason)
       end
     end

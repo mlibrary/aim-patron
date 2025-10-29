@@ -48,7 +48,7 @@ class Patron
     end
 
     def sponsor_reason
-      hr_item.umichSponsorReason
+      hr_data.umichSponsorReason
     end
 
     def valid_start_date?(hr_item)
