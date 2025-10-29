@@ -14,18 +14,19 @@ class Report
   ]
   def self.configure_yabeda!
     Yabeda.configure do
+      default_tag :script_type, "test"
       group :aim_patron_load do
-        gauge :loaded, comment: "Number of loaded patrons", tags: [:script_type]
-        gauge :skipped, comment: "Number of skipped patrons", tags: [:script_type]
-        gauge :found, comment: "Number of found patrons", tags: [:script_type]
-        gauge :patron_kind, comment: "Number of patrons in a given major category", tags: [:script_type, :name]
-        gauge :campus, comment: "Number of patrons in a given campus", tags: [:script_type, :name]
-        gauge :user_group, comment: "Number of patrons in a given Alma User Group", tags: [:script_type, :name]
-        gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:script_type, :name]
-        gauge :sponsor_reason, comment: "Number of loaded Sponsored Affiliates with a given sponsor reason", tags: [:script_type, :name]
-        gauge :exclude_reason, comment: "Number of patrons skipped for a given reason", tags: [:script_type, :name]
-        gauge :error, comment: "Number of errors encountered while running the patron load", tags: [:script_type]
-        gauge :job_duration_seconds, comment: "Number of seconds it took to run the patron load job", tags: [:script_type]
+        gauge :loaded, comment: "Number of loaded patrons"
+        gauge :skipped, comment: "Number of skipped patrons"
+        gauge :found, comment: "Number of found patrons"
+        gauge :patron_kind, comment: "Number of patrons in a given major category", tags: [:name]
+        gauge :campus, comment: "Number of patrons in a given campus", tags: [:name]
+        gauge :user_group, comment: "Number of patrons in a given Alma User Group", tags: [:name]
+        gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:name]
+        gauge :sponsor_reason, comment: "Number of loaded Sponsored Affiliates with a given sponsor reason", tags: [:name]
+        gauge :exclude_reason, comment: "Number of patrons skipped for a given reason", tags: [:name]
+        gauge :error, comment: "Number of errors encountered while running the patron load"
+        gauge :job_duration_seconds, comment: "Number of seconds it took to run the patron load job"
       end
     end
     Yabeda.configure!
@@ -53,22 +54,26 @@ class Report
     end
   end
 
-  def self.open(file_base:, script_type:, &block)
+  def self.open(file_base, script_type: "whatever", &block)
     if file_base
       File.open("#{file_base}.tsv", "w") do |fh|
-        report = Report.new(fh: fh, script_type: script_type)
+        report = Report.new(fh)
         block.call(report)
       end
     else
-      report = Report.new(fh: $stdout, script_type: script_type)
-      block.call(report)
+      StringIO.open do |fh|
+        report = Report.new(fh)
+        block.call(report)
+        puts "\n"
+        puts fh.string
+        puts "\n"
+      end
     end
   end
 
-  def initialize(fh:, script_type:)
+  def initialize(fh)
     @fh = fh
     @fh.write self.class.column_names.join("\t") + "\n"
-    @script_type = script_type
   end
 
   def metrics
@@ -78,8 +83,8 @@ class Report
   def load(patron)
     patron = Patron.new(patron: patron, action: "load")
     @fh.write patron.report_string
-    metrics.found.increment({script_type: @script_type})
-    metrics.loaded.increment({script_type: @script_type})
+    metrics.found.increment
+    metrics.loaded.increment
     ["patron_kind", "statistic_category", "user_group", "campus", "sponsor_reason"].each do |metric|
       increment_metric(metric, patron)
     end
@@ -88,8 +93,8 @@ class Report
   def skip(patron)
     patron = Patron.new(patron: patron, action: "skip")
     @fh.write patron.report_string
-    metrics.found.increment({script_type: @script_type})
-    metrics.skipped.increment({script_type: @script_type})
+    metrics.found.increment
+    metrics.skipped.increment
   end
 
   def report_string(kind:, patron:)
@@ -105,7 +110,7 @@ class Report
   end
 
   def increment_metric(metric, patron)
-    metrics.public_send(metric).increment({script_type: @script_type, name: patron.public_send(metric)}) if patron.public_send(metric)
+    metrics.public_send(metric).increment({name: patron.public_send(metric)}) if patron.public_send(metric)
   end
 
   class Patron
