@@ -9,6 +9,7 @@ class Report
         gauge :skipped, comment: "Number of skipped patrons", tags: [:script_type]
         gauge :found, comment: "Number of found patrons", tags: [:script_type]
         gauge :patron_kind, comment: "Number of patrons in a given major category", tags: [:script_type, :name]
+        gauge :campus, comment: "Number of patrons in a given campus", tags: [:script_type, :name]
         gauge :user_group, comment: "Number of patrons in a given Alma User Group", tags: [:script_type, :name]
         gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:script_type, :name]
         gauge :error, comment: "Number of errors encountered while running the patron load", tags: [:script_type]
@@ -62,8 +63,7 @@ class Report
     @fh.write report_string(kind: "LOAD", patron: patron)
     metrics.found.increment({script_type: @script_type})
     metrics.loaded.increment({script_type: @script_type})
-
-    ["patron_kind", "statistic_category", "user_group"].each do |metric|
+    ["patron_kind", "statistic_category", "user_group", "campus"].each do |metric|
       increment_metric(metric, patron)
     end
   end
@@ -77,9 +77,9 @@ class Report
   def report_string(kind:, patron:)
     [
       kind,
-      patron.umid.value,
+      patron.umid,
       patron.uniqname,
-      patron.campus_code,
+      patron.campus,
       patron.user_group,
       patron.statistic_category
       # patron.exclude_reasons
@@ -93,8 +93,10 @@ class Report
   class Patron
     extend Forwardable
 
-    def_delegators :@patron, :umid, :uniqname, :campus_code, :statistic_category
+    def_delegators :@patron, :uniqname
 
+    # From the User Group Code Table 2025-10-29. Does not include codes that
+    # will never get set here.
     USER_GROUP_MAP = {
       "01" => "faculty",
       "02" => "staff",
@@ -103,12 +105,72 @@ class Report
       "14" => "temporary_staff"
     }
 
+    CAMPUS_MAP = {
+      "UMAA" => "ann_arbor",
+      "UMDB" => "dearborn",
+      "UMFL" => "flint"
+    }
+
+    # From the User Statistical Categories Code Table 2025-10-29. Includes all
+    # of the codes, even the ones that will never get set with this code
+    STATISTIC_CATEGORY_MAP = {
+      "FA" =>	"faculty",
+      "WD" =>	"william_davidson_inst",
+      "ST" =>	"staff",
+      "GR" =>	"graduate",
+      "UN" =>	"undergrad",
+      "SA" =>	"sponsored_affiliate",
+      "TS" =>	"temp_staff",
+      "CN" =>	"contractor",
+      "CD" =>	"candidate",
+      "DS" =>	"detached_study",
+      "AF" =>	"adjunct_faculty",
+      "AL" =>	"alumni-fee_based",
+      "CA" =>	"carrel",
+      "CI" =>	"cic",
+      "D1" =>	"dietetics_intern_med",
+      "DB" =>	"debater",
+      "DO" =>	"docent",
+      "EM" =>	"emeritus",
+      "GS" =>	"guest",
+      "HH" =>	"howard_hughes_med_inst",
+      "IL" =>	"ill",
+      "JF" =>	"journalism_fellow",
+      "MI" =>	"faculty_from_michigan",
+      "EU" =>	"emu",
+      "MR" =>	"mrlt",
+      "OT" =>	"other",
+      "PR" =>	"proxy",
+      "RC" =>	"religious_counselor",
+      "RE" =>	"reserve",
+      "RF" =>	"retired_faculty",
+      "RS" =>	"retired_staff",
+      "SP" =>	"spouse",
+      "SU" =>	"summer_program",
+      "WC" =>	"wash_comm_college",
+      "GE" =>	"geo",
+      "FR" =>	"free_guest",
+      "SH" =>	"shares"
+    }
+
     def initialize(patron)
       @patron = patron
     end
 
+    def umid
+      @patron.umid.value
+    end
+
     def user_group
       USER_GROUP_MAP[@patron.user_group] || @patron.user_group
+    end
+
+    def campus
+      CAMPUS_MAP[@patron.campus_code] || @patron.campus_code
+    end
+
+    def statistic_category
+      STATISTIC_CATEGORY_MAP[@patron.statistic_category] || @patron.statistic_category
     end
 
     def patron_kind
