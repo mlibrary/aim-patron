@@ -16,7 +16,6 @@
 
 require "rspec"
 require "byebug"
-# require 'webmock/rspec'
 require "simplecov"
 SimpleCov.start
 ENV["APP_ENV"] = "test"
