@@ -26,6 +26,7 @@ describe Report do
     it "increments the counters" do
       subject.load(staff_person)
       expect(Report.metrics.statistic_category.get(name: "ST", script_type: "test")).to eq(1)
+      expect(Report.metrics.patron_kind.get(name: "staff_person", script_type: "test")).to eq(1)
     end
   end
 end

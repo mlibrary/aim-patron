@@ -50,6 +50,14 @@ describe Patron do
   it "returns an email_address" do
     expect(subject.email_address).to eq("emcard@umich.edu")
   end
+  context "#kind" do
+    it "has a kind that's the name of the class" do
+      expect(subject.kind).to eq("patron")
+    end
+    it "has a kind that is a lowercase, snake case version of the class name" do
+      expect(staff_person.kind).to eq("staff_person")
+    end
+  end
   context "#phone_number" do
     it "returns the first telephoneNumber if there is one" do
       @patron["telephonenumber"].push("someotherphone number")

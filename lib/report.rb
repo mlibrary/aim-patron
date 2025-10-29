@@ -7,6 +7,7 @@ class Report
         gauge :loaded, comment: "Number of loaded patrons", tags: [:script_type]
         gauge :skipped, comment: "Number of skipped patrons", tags: [:script_type]
         gauge :found, comment: "Number of found patrons", tags: [:script_type]
+        gauge :patron_kind, comment: "Number of patrons in a given major category", tags: [:script_type, :name]
         gauge :statistic_category, comment: "Number of loaded patrons in a statistic category", tags: [:script_type, :name]
         gauge :error, comment: "Number of errors encountered while running the patron load", tags: [:script_type]
         gauge :job_duration_seconds, comment: "Number of seconds it took to run the patron load job", tags: [:script_type]
@@ -59,6 +60,7 @@ class Report
     metrics.found.increment({script_type: @script_type})
     metrics.loaded.increment({script_type: @script_type})
     metrics.statistic_category.increment({script_type: @script_type, name: patron.statistic_category})
+    metrics.patron_kind.increment({script_type: @script_type, name: patron.kind})
   end
 
   def skip(patron)
