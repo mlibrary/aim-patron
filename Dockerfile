@@ -40,7 +40,8 @@ FROM base AS development
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   vim-tiny\
-  git
+  git \
+  jq
 
 
 USER app
