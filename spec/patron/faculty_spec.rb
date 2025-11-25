@@ -18,9 +18,21 @@ describe Patron::Faculty do
       @patron["umichhr"][0].sub!("UM_ANN-ARBOR", "UM_FLINT")
       expect(subject.campus_code).to eq("UMFL")
     end
+    it "comes from first faculty matched inst role when not hr data" do
+      @patron["umichinstroles"].push("FacultyAA")
+      @patron["umichhr"] = []
+      expect(subject.campus_code).to eq("UMAA")
+    end
   end
   context "#includable?" do
     it "is true when it has a Faculty job category" do
+      expect(subject.includable?).to eq(true)
+    end
+    it "is true when emeritus in job title, even without job category" do
+      @patron["umichhr"] = []
+      @patron["umichtitle"] = [
+        "PROFESSOR EMERITUS OF ENGLISH, COLLEGE OF ARTS AND SCIENCES, THE UNIVERSITY OF MICHIGAN-FLINT"
+      ]
       expect(subject.includable?).to eq(true)
     end
     it "is false when there is no appropriate job category" do
@@ -42,6 +54,10 @@ describe Patron::Faculty do
     it "returns a job_description from HR data" do
       expect(subject.job_description).to eq("Library Info Tech - AIM (470430)")
     end
+    it "returns an empty string when there's no hr data" do
+      @patron["umichhr"] = []
+      expect(subject.job_description).to be_nil
+    end
   end
   context "#hr_data" do
     it "returns appropriate object for staff" do
@@ -52,10 +68,31 @@ describe Patron::Faculty do
     it "returns FA" do
       expect(subject.statistic_category).to eq("FA")
     end
-    it "handles an emeritus" do
+    it "handles an emeritus in jobcode" do
       # Professor Emeritus
       @patron["umichhr"][0].sub!("jobcode=101904", "jobcode=201070")
       expect(subject.statistic_category).to eq("EM")
+    end
+    context "#emeritus in job title" do
+      it "handles Emeritus in job title" do
+        @patron["umichtitle"] = [
+          "Ruth Dow Doan Professor of Biologic Nanotechnology, Professor Emeritus of Internal Medicine, Director, MI Nanotechnology Institute, Medical School and Professor Emeritus of Biomedical Engineering, College of Engineering"
+
+        ]
+        expect(subject.statistic_category).to eq("EM")
+      end
+      it "handles Emerita" do
+        @patron["umichtitle"] = [
+          "Professor Emerita of Psychology and Professor Emerita of Asian Languages and Cultures, College of Literature, Science, and the Arts"
+        ]
+        expect(subject.statistic_category).to eq("EM")
+      end
+      it "handles all caps" do
+        @patron["umichtitle"] = [
+          "PROFESSOR EMERITUS OF ENGLISH, COLLEGE OF ARTS AND SCIENCES, THE UNIVERSITY OF MICHIGAN-FLINT"
+        ]
+        expect(subject.statistic_category).to eq("EM")
+      end
     end
     it "handles an adjunct faculty" do
       # Adjunct Faculty

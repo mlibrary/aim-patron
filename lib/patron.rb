@@ -15,6 +15,10 @@ require_relative "patron/name"
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
 
+  def self.inst_role_map
+    INST_ROLE_MAP
+  end
+
   def self.inst_roles_for(data)
     INST_ROLE_MAP.select do |inst_role|
       data["umichinstroles"].include?(inst_role["key"])

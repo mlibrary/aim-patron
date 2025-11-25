@@ -14,6 +14,10 @@ class Patron
       # "Subscribers",
       "Temporary Staff"
     ]
+    def inst_role_base
+      "SponsoredAffiliate"
+    end
+
     def user_group
       "01"
     end

@@ -26,6 +26,15 @@ class Patron
       "201110" => "EM", # ASSOC PROF EMERITUS/A
       "201120" => "EM" # ASST PROF EMERITUS/A
     }
+
+    def includable?
+      !!emeritus_umich_title || super
+    end
+
+    def inst_role_base
+      "Faculty"
+    end
+
     def role
       "faculty"
     end
@@ -35,7 +44,7 @@ class Patron
     end
 
     def statistic_category
-      JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
+      emeritus_umich_title || JOBCODE_TO_STATISTIC_CATEGORY[hr_data.jobcode] || "FA"
     end
 
     def hr_criteria(hr_item)
@@ -44,6 +53,10 @@ class Patron
 
     def exclude_reason
       "no_faculty_job_category" unless includable?
+    end
+
+    def emeritus_umich_title
+      "EM" if ["emeritus", "emerita"].any? { |em| /em/i.match?(@data["umichtitle"]&.first) }
     end
   end
 end
