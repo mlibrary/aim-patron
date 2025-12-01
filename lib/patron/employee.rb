@@ -42,7 +42,7 @@ class Patron
     end
 
     def includable?
-      !hr_data.nil?
+      hr_data.to_h != {}
     end
 
     def umich_address_type
@@ -80,7 +80,7 @@ class Patron
     def hr_data
       @hr_data ||= begin
         library_job = hr_filtered.find { |x| x.deptId =~ /^47/ }
-        result = library_job || hr_filtered.first
+        result = library_job || hr_filtered.first || OpenStruct.new
         S.logger.debug("hr_data", class: self.class, uniqname: uniqname, data: result)
         result
       end
