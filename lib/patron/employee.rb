@@ -87,8 +87,8 @@ class Patron
     end
 
     def campus_code_from_inst_role
-      umichinstrole = @data["umichinstroles"].first { |x| inst_role_base.match?(x) }
-      Patron.inst_role_map.first { |x| x["key"] == umichinstrole }["campus"]
+      umichinstrole = @data["umichinstroles"].find { |x| x.match?(inst_role_base) }
+      Patron.inst_role_map.find { |x| x["key"] == umichinstrole }["campus"]
     end
   end
 end
