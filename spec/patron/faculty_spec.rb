@@ -19,9 +19,9 @@ describe Patron::Faculty do
       expect(subject.campus_code).to eq("UMFL")
     end
     it "comes from first faculty matched inst role when not hr data" do
-      @patron["umichinstroles"].push("FacultyAA")
+      @patron["umichinstroles"][1] = "FacultyDBRN"
       @patron["umichhr"] = []
-      expect(subject.campus_code).to eq("UMAA")
+      expect(subject.campus_code).to eq("UMDB")
     end
   end
   context "#includable?" do
