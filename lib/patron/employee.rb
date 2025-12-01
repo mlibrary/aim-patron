@@ -50,7 +50,7 @@ class Patron
     end
 
     def job_description
-      "#{hr_data.deptDescription} (#{hr_data.deptId})" if hr_data
+      "#{hr_data.deptDescription} (#{hr_data.deptId})" if hr_data.to_h != {}
     end
 
     def hr_attribute
