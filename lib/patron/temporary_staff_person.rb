@@ -1,5 +1,9 @@
 class Patron
   class TemporaryStaffPerson < Patron::Employee
+    def inst_role_base
+      "TemporaryStaff"
+    end
+
     def user_group
       "14"
     end

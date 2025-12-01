@@ -36,35 +36,35 @@ describe Patron::SponsoredAffiliate do
     end
     it "returns false for non-includable sponsor reason" do
       @patron["umichsponsorshipdetail"][0].sub!("umichSponsorReason=Researchers", "umichSponsorReason=Other Guests")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns nil for UROP department" do
       @patron["umichsponsorshipdetail"][0].sub!("deptDescription=SOME DEPARTMENT DESCRIPTION", "deptDescription=LSA UG: UROP")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for no sponsor start date" do
       @patron["umichsponsorshipdetail"][0].sub!("{umichSponsorStartDate=#{@start_date_str}}:", "")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for inincludable format of start date" do
       @patron["umichsponsorshipdetail"][0].sub!("umichSponsorStartDate=#{@start_date_str}", "umichSponsorStartDate=15102022")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for no sponsor end date" do
       @patron["umichsponsorshipdetail"][0].sub!("{umichSponsorEndDate=#{@end_date_str}}:", "")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for inincludable format of end date" do
       @patron["umichsponsorshipdetail"][0].sub!("umichSponsorEndDate=#{@end_date_str}", "umichSponsorEndDate=15102022")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for start date in the future" do
       @patron["umichsponsorshipdetail"][0].sub!("umichSponsorStartDate=#{@start_date_str}", "umichSponsorStartDate=#{@end_date}")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
     it "returns false for end date in the past" do
       @patron["umichsponsorshipdetail"][0].sub!("umichSponsorEndDate=#{@end_date_str}", "umichSponsorEndDate=#{@start_date_str}")
-      expect(subject.hr_data).to be_nil
+      expect(subject.hr_data.to_h).to eq({})
     end
   end
   context "#statistic_category" do

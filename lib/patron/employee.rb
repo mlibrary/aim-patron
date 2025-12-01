@@ -14,6 +14,10 @@ class Patron
       raise NotImplementedError
     end
 
+    def inst_role_base
+      raise NotImplementedError
+    end
+
     [
       "statistic_category",
       "user_group",
@@ -26,7 +30,7 @@ class Patron
     end
 
     def campus_code
-      HR_CAMPUS_MAP[hr_data.campus.downcase]
+      HR_CAMPUS_MAP.dig(hr_data&.campus&.downcase) || campus_code_from_inst_role
     end
 
     def email_type
@@ -38,7 +42,7 @@ class Patron
     end
 
     def includable?
-      !hr_data.nil?
+      hr_data.to_h != {}
     end
 
     def umich_address_type
@@ -46,7 +50,7 @@ class Patron
     end
 
     def job_description
-      "#{hr_data.deptDescription} (#{hr_data.deptId})"
+      "#{hr_data.deptDescription} (#{hr_data.deptId})" if hr_data.to_h != {}
     end
 
     def hr_attribute
@@ -76,10 +80,15 @@ class Patron
     def hr_data
       @hr_data ||= begin
         library_job = hr_filtered.find { |x| x.deptId =~ /^47/ }
-        result = library_job || hr_filtered.first
+        result = library_job || hr_filtered.first || OpenStruct.new
         S.logger.debug("hr_data", class: self.class, uniqname: uniqname, data: result)
         result
       end
+    end
+
+    def campus_code_from_inst_role
+      umichinstrole = @data["umichinstroles"].first { |x| inst_role_base.match?(x) }
+      Patron.inst_role_map.first { |x| x["key"] == umichinstrole }["campus"]
     end
   end
 end

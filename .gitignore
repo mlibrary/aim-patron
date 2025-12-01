@@ -3,6 +3,7 @@
 .cache
 coverage
 .byebug_history
+.bash_history
 .irb_history
 output/*.xml
 output/*.tsv

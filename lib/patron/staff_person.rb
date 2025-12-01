@@ -6,6 +6,10 @@ class Patron
       "205800" # GRAD STU STAFF ASST
     ]
 
+    def inst_role_base
+      "RegularStaff"
+    end
+
     def role
       "staff"
     end
