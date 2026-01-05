@@ -44,6 +44,7 @@ class Patron
         exclude_reasons.push(user.exclude_reason)
       end
     end
+    exclude_reasons.push("no_valid_institution_role") if inst_roles.empty?
     Skipped.new(data: data, exclude_reasons: exclude_reasons)
   end
 
