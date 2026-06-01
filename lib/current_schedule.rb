@@ -7,7 +7,7 @@ class CurrentSchedule
         break
       end
     end
-    @current_config = config[config.count - 1] if @current_config.nil?
+    @current_config = config[-1] if @current_config.nil?
   end
 
   def default_expiry_date
