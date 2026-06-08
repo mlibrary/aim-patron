@@ -1,3 +1,4 @@
+require "ostruct"
 class CurrentSchedule
   def initialize(config: CSV.read("./config/patron_load_schedule.tsv", headers: true, col_sep: "\t"), today: Date.today)
     @current_config = nil
@@ -111,5 +112,95 @@ class NewCurrentSchedule
     first = Date.new(year, 8)
     offset = FRIDAY_OFFSET[first.wday]
     Date.new(year, 8, 1 + offset)
+  end
+end
+
+class NewCurrentSchedule
+  class Term
+    FRIDAY_OFFSET = [5, 4, 3, 2, 1, 0, 6]
+    def initialize(year)
+      @year = year
+      @jan_first = Date.new(year)
+    end
+
+    def suffix
+      @jan_first.strftime("%y")
+    end
+
+    def text
+      "#{prefix}#{suffix}"
+    end
+
+    def in_range(date)
+      date >= term_range.start && date < term_range.finish
+    end
+
+    private
+
+    def friday_in_month(month:, week_number: 1, next_year: false)
+      year = next_year ? @year + 1 : @year
+      # week_number = 1; day_number = 1
+      # week_number = 2; day_number = 8
+      # week_number = 3; day_number = 15
+      day_number = 1 + ((week_number - 1) * 7)
+      first = Date.new(year, month)
+      offset = FRIDAY_OFFSET[first.wday]
+      Date.new(year, month, day_number + offset)
+    end
+  end
+
+  class Winter < Term
+    def prefix
+      "W"
+    end
+
+    def term_range
+      OpenStruct.new(start: friday_in_month(month: 1, week_number: 2), finish: friday_in_month(month: 4))
+    end
+  end
+
+  class Spring < Term
+    def prefix
+      "SP"
+    end
+
+    # First Friday in April to First Friday in July
+    def term_range
+      OpenStruct.new(start: friday_in_month(month: 4), finish: friday_in_month(month: 7))
+    end
+  end
+
+  class Summer < Term
+    def prefix
+      "SU"
+    end
+
+    # First Friday in April to First Friday in August
+    def term_range
+      OpenStruct.new(start: friday_in_month(month: 4), finish: friday_in_month(month: 8))
+    end
+  end
+
+  class SpringSummer < Term
+    def prefix
+      "SS"
+    end
+
+    # First Friday in April to First Friday in August
+    def term_range
+      OpenStruct.new(start: friday_in_month(month: 4), finish: friday_in_month(month: 8))
+    end
+  end
+
+  class Fall < Term
+    def prefix
+      "F"
+    end
+
+    #
+    # First Friday in April to Second Friday in January next year
+    def term_range
+      OpenStruct.new(start: friday_in_month(month: 4), finish: friday_in_month(month: 1, week_number: 2, next_year: true))
+    end
   end
 end

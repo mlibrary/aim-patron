@@ -119,3 +119,108 @@ describe NewCurrentSchedule do
     end
   end
 end
+
+describe NewCurrentSchedule::Winter do
+  it "has expected text" do
+    expect(described_class.new(2026).text).to eq("W26")
+    expect(described_class.new(2027).text).to eq("W27")
+  end
+
+  context "#in_range" do
+    it "is in range for the second friday of January" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-01-09"))).to eq(true)
+    end
+    it "is in range for the day before the first friday in April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-02"))).to eq(true)
+    end
+    it "is out of range for the day before the second friday in January" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-01-08"))).to eq(false)
+    end
+    it "is out of range for the first friday in January" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-03"))).to eq(false)
+    end
+  end
+end
+describe NewCurrentSchedule::Spring do
+  it "has expected text" do
+    expect(described_class.new(2026).text).to eq("SP26")
+    expect(described_class.new(2027).text).to eq("SP27")
+  end
+
+  context "#in_range" do
+    it "is in range for the first friday of April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-03"))).to eq(true)
+    end
+    it "is in range for the day before the first friday in July" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-07-02"))).to eq(true)
+    end
+    it "is out of range for the day before the first friday in April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-02"))).to eq(false)
+    end
+    it "is out of range for the first friday in July" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-07-03"))).to eq(false)
+    end
+  end
+end
+describe NewCurrentSchedule::Summer do
+  it "has expected text" do
+    expect(described_class.new(2026).text).to eq("SU26")
+    expect(described_class.new(2027).text).to eq("SU27")
+  end
+
+  context "#in_range" do
+    it "is in range for the first friday of April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-03"))).to eq(true)
+    end
+    it "is in range for the day before the first friday in August" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-08-06"))).to eq(true)
+    end
+    it "is out of range for the day before the first friday in April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-02"))).to eq(false)
+    end
+    it "is out of range for the first friday in August" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-08-07"))).to eq(false)
+    end
+  end
+end
+describe NewCurrentSchedule::SpringSummer do
+  it "has expected text" do
+    expect(described_class.new(2026).text).to eq("SS26")
+    expect(described_class.new(2027).text).to eq("SS27")
+  end
+  context "#in_range" do
+    it "is in range for the first friday of April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-03"))).to eq(true)
+    end
+    it "is in range for the day before the first friday in August" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-08-06"))).to eq(true)
+    end
+    it "is out of range for the day before the first friday in April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-02"))).to eq(false)
+    end
+    it "is out of range for the first friday in August" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-08-07"))).to eq(false)
+    end
+  end
+end
+describe NewCurrentSchedule::Fall do
+  it "has expected text" do
+    expect(described_class.new(2026).text).to eq("F26")
+    expect(described_class.new(2027).text).to eq("F27")
+  end
+
+  context "#in_range" do
+    it "is in range for the first friday of April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-03"))).to eq(true)
+    end
+    it "is in range for the day before the second friday in January" do
+      expect(described_class.new(2026).in_range(Date.parse("2027-01-07"))).to eq(true)
+    end
+    it "is out of range for the day before the first friday in April" do
+      expect(described_class.new(2026).in_range(Date.parse("2026-04-02"))).to eq(false)
+    end
+    it "is out of range for the second friday in January" do
+      expect(described_class.new(2026).in_range(Date.parse("2027-01-08"))).to eq(false)
+    end
+  end
+end
