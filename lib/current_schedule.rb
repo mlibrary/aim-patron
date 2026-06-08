@@ -40,6 +40,20 @@ class NewCurrentSchedule
     end
   end
 
+  def terms
+    year = @today.year
+    [
+      Fall.new(year - 1),
+      Winter.new(year),
+      Spring.new(year),
+      SpringSummer.new(year),
+      Summer.new(year),
+      Fall.new(year)
+    ].filter_map do |term|
+      term.text if term.in_range(@today)
+    end
+  end
+
   def update_date
     december_last_year = december_update_date(today.year - 1)
     april_this_year = april_update_date(today.year)

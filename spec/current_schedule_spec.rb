@@ -118,6 +118,11 @@ describe NewCurrentSchedule do
       expect_update_date("2025-12-12", "2025-12-12")
     end
   end
+  context "#terms" do
+    it "has expected terms for given date" do
+      expect(described_class.new(Date.parse("2026-04-04")).terms).to contain_exactly("SP26", "SS26", "SU26", "F26")
+    end
+  end
 end
 
 describe NewCurrentSchedule::Winter do
