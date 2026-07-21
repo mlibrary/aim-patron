@@ -59,7 +59,10 @@ class Patron
     end
 
     def includable?
-      registered_or_candidate? && valid_academic_career?
+      @includable ||= begin
+        S.logger.debug("#{self.class}; current term: #{current_term}; register status: #{current_term_status.regStatus}")
+        registered_or_candidate? && valid_academic_career?
+      end
     end
 
     def exclude_reason
@@ -72,10 +75,18 @@ class Patron
 
     private
 
-    def registered_or_candidate?
-      ldap_fields(@data["umichaatermstatus"]).any? do |term|
+    def current_term
+      current_term_status.termCode ? term(current_term_status.termCode) : "NONE"
+    end
+
+    def current_term_status
+      ldap_fields(@data["umichaatermstatus"]).find do |term|
         (term.regStatus == "RGSD" || term.acadCareer == "GRAC") && @current_schedule.includable_term?(term(term.termCode))
-      end
+      end || OpenStruct.new
+    end
+
+    def registered_or_candidate?
+      current_term != "NONE"
     end
 
     def valid_academic_career?
