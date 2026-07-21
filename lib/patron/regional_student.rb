@@ -28,21 +28,18 @@ class Patron
     end
 
     def includable?
-      current_term_status.any? do |term|
-        term.registered == "Y" && @current_schedule.includable_term?(term(term.academicPeriod))
+      @includable ||= begin
+        S.logger.debug("#{self.class}; current term: #{current_term}; registered: #{current_term_status.registered || "N"}")
+        current_term_status.registered == "Y" && @current_schedule.includable_term?(current_term)
       end
     end
 
     def job_description
-      current_term_status.map do |term|
-        term.programDesc
-      end.compact.first
+      current_term_status.programDesc
     end
 
     def statistic_category
-      current_term_status.map do |term|
-        CLASS_STANDING_STATISTIC_CATEGORY_MAP[term.classStanding]
-      end.compact.first
+      CLASS_STANDING_STATISTIC_CATEGORY_MAP[current_term_status.classStanding]
     end
 
     def user_group
@@ -66,8 +63,25 @@ class Patron
       "#{semester}#{year}"
     end
 
+    def current_term
+      @current_term ||= current_term_status.academicPeriod ? term(current_term_status.academicPeriod) : "NONE"
+    end
+
     def current_term_status
-      ldap_fields(@data["umich#{ldap_campus}currenttermstatus"] || [])
+      @current_term_status ||= begin
+        if !@data["umich#{ldap_campus}currenttermstatus"].empty?
+          return ldap_fields(@data["umich#{ldap_campus}currenttermstatus"]).first
+        end
+
+        ldap_fields(@data["umich#{ldap_campus}termstatus"])
+          .select { |x| x.registered == "Y" }
+          .sort_by { |x| x.academicPeriod }
+          .rfind do |t|
+            @current_schedule.includable_term?(term(t.academicPeriod))
+          end || OpenStruct.new
+      end
+
+      # ldap_fields(@data["umich#{ldap_campus}currenttermstatus"] + @data["umich#{ldap_campus}termstatus"])
     end
   end
 
