@@ -107,8 +107,8 @@ class ProcessLdap
   def process
     start = Time.now
     S.logger.info("start")
-    S.logger.info("expiry_date: #{Patron.current_schedule.expiry_date}")
-    S.logger.info("Includable Terms: #{Patron.current_schedule.terms.join(",")}")
+    S.logger.info("expiry_date: #{Patron.expiry_date}")
+    S.logger.info("includable_terms: #{Patron.includable_terms_string}")
     S.logger.info("open files", file_base: @file_base) if @file_base
     Report.open(@file_base) do |report|
       write_to_output do |output|

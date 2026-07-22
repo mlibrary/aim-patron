@@ -21,6 +21,14 @@ class Patron
     CURRENT_SCHEDULE
   end
 
+  def self.expiry_date
+    CURRENT_SCHEDULE.expiry_date
+  end
+
+  def self.includable_terms_string
+    CURRENT_SCHEDULE.terms.join(", ")
+  end
+
   def self.inst_role_map
     INST_ROLE_MAP
   end
