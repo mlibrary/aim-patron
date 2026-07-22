@@ -8,10 +8,6 @@ class CurrentSchedule
     @today = today
   end
 
-  def default_expiry_date
-    expiry_date
-  end
-
   def includable_term?(term)
     terms.include?(term)
   end

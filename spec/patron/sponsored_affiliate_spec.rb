@@ -2,8 +2,8 @@ describe Patron::SponsoredAffiliate do
   before(:each) do
     @patron = json_fixture("emcard_staff.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
-    @default_expiry_date = Date.today.next_year
-    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: @default_expiry_date)
+    @expiry_date = Date.today.next_year
+    @current_schedule_double = instance_double(CurrentSchedule, expiry_date: @expiry_date)
     @start_date = Date.today.prev_day
     @start_date_str = @start_date.strftime("%m/%d/%Y")
     @end_date = Date.today.next_day
@@ -119,7 +119,7 @@ describe Patron::SponsoredAffiliate do
     it "returns the regular expire date when the SponsorEndDate is later" do
       end_date = Date.today.next_year(2).strftime("%m/%d/%Y")
       @sponsorship_info.sub!("umichSponsorEndDate=#{@end_date_str}", "umichSponsorEndDate=#{end_date}")
-      expect(subject.expiry_date).to eq(@default_expiry_date)
+      expect(subject.expiry_date).to eq(@expiry_date)
     end
   end
   context "#purge_date" do
@@ -129,7 +129,7 @@ describe Patron::SponsoredAffiliate do
     it "returns the regular purge_date when the SponsorEndDate is later than the expire_date" do
       end_date = Date.today.next_year(2).strftime("%m/%d/%Y")
       @sponsorship_info.sub!("umichSponsorEndDate=#{@end_date_str}", "umichSponsorEndDate=#{end_date}")
-      expect(subject.purge_date).to eq(@default_expiry_date.next_year(2))
+      expect(subject.purge_date).to eq(@expiry_date.next_year(2))
     end
   end
 end

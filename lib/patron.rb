@@ -134,7 +134,7 @@ class Patron
   end
 
   def expiry_date
-    @current_schedule.default_expiry_date
+    @current_schedule.expiry_date
   end
 
   def purge_date
