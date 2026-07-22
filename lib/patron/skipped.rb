@@ -1,6 +1,6 @@
 class Patron
   class Skipped < Patron
-    def initialize(data:, exclude_reasons:, name: Name.new(data), current_schedule: CurrentSchedule.new)
+    def initialize(data:, exclude_reasons:, name: Name.new(data), current_schedule: Patron.current_schedule)
       @data = data
       @name = name
       @current_schedule = current_schedule

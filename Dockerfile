@@ -1,11 +1,10 @@
 ################################################################################
 # BASE
 ################################################################################
-FROM ruby:3.4-slim AS base
+FROM ruby:4.0-slim-trixie@sha256:f7866408e569d1699d9aceaa7f2726b231119871d42bb271fef1fb573c2418c5 AS base
 
 ARG UID=1000
 ARG GID=1000
-ARG NODE_MAJOR=20
 
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \

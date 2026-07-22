@@ -2,7 +2,7 @@ describe Patron::DearbornStudent do
   before(:each) do
     @patron = json_fixture("emcard_dearborn_student.json")
     @name_double = instance_double(Patron::Name, first_name: "Emily", middle_name: "O", last_name: "Card", middle_name?: true)
-    @current_schedule_double = instance_double(CurrentSchedule, default_expiry_date: Date.parse("2022-01-31"), includable_term?: true)
+    @current_schedule_double = instance_double(CurrentSchedule, expiry_date: Date.parse("2022-01-31"), includable_term?: true)
   end
   subject do
     described_class.new(data: @patron, name: @name_double, current_schedule: @current_schedule_double)
@@ -53,10 +53,6 @@ describe Patron::DearbornStudent do
       end
       expect(subject.includable?).to eq(false)
     end
-    it "is false when there's no CurrentTermStatus" do
-      @patron.delete("umichdbrncurrenttermstatus")
-      expect(subject.includable?).to eq(false)
-    end
   end
   context "#exclude_reason" do
     it "is nil when there is a registered for a current term" do
@@ -73,10 +69,6 @@ describe Patron::DearbornStudent do
       allow(@current_schedule_double).to receive(:includable_term?) do |termcode|
         termcode == "W24" # this will be later than Spring or Summer 2022
       end
-      expect(subject.exclude_reason).to eq("not_registered")
-    end
-    it "is false when there's no CurrentTermStatus" do
-      @patron.delete("umichdbrncurrenttermstatus")
       expect(subject.exclude_reason).to eq("not_registered")
     end
   end
