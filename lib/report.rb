@@ -73,6 +73,8 @@ class Report
 
   def initialize(fh)
     @fh = fh
+    @fh.write("Expiry Date: #{::Patron.expiry_date}\n")
+    @fh.write("Includable Terms: #{::Patron.includable_terms_string}\n")
     @fh.write self.class.column_names.join("\t") + "\n"
   end
 
