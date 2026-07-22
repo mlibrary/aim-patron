@@ -12,7 +12,7 @@ gem "milemarker"
 
 group :development, :test do
   gem "pry"
-  gem "byebug"
+  gem "debug"
   gem "rack-test"
   gem "rspec"
   gem "simplecov"

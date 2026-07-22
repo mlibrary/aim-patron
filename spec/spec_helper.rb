@@ -15,7 +15,7 @@
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "rspec"
-require "byebug"
+require "debug"
 require "simplecov"
 SimpleCov.start
 ENV["APP_ENV"] = "test"
