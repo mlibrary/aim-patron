@@ -1,36 +1,23 @@
 require "ostruct"
 class CurrentSchedule
-  def initialize(config: CSV.read("./config/patron_load_schedule.tsv", headers: true, col_sep: "\t"), today: Date.today)
-    @current_config = nil
-    config.each.with_index do |row, index|
-      if today < Date.parse(row["Update Date"])
-        @current_config = config[index - 1]
-        break
-      end
-    end
-    @current_config = config[-1] if @current_config.nil?
-  end
-
-  def default_expiry_date
-    Date.parse(@current_config["Expiry Date"])
-  end
-
-  def includable_term?(term)
-    @current_config["Term"].split(", ").include?(term)
-  end
-end
-
-class NewCurrentSchedule
   FRIDAY_OFFSET = [5, 4, 3, 2, 1, 0, 6]
   SUNDAY_OFFSET = [0, 6, 5, 4, 3, 2, 1]
   attr_reader :today
 
-  def initialize(today)
+  def initialize(today = Date.today)
     @today = today
   end
 
+  def default_expiry_date
+    expiry_date
+  end
+
+  def includable_term?(term)
+    terms.include?(term)
+  end
+
   def expiry_date
-    case update_date.month
+    @expiry_date ||= case update_date.month
     when 4
       august_expiry_date(update_date.year)
     when 8
@@ -41,16 +28,18 @@ class NewCurrentSchedule
   end
 
   def terms
-    year = @today.year
-    [
-      Fall.new(year - 1),
-      Winter.new(year),
-      Spring.new(year),
-      SpringSummer.new(year),
-      Summer.new(year),
-      Fall.new(year)
-    ].filter_map do |term|
-      term.text if term.in_range(@today)
+    @terms ||= begin
+      year = @today.year
+      [
+        Fall.new(year - 1),
+        Winter.new(year),
+        Spring.new(year),
+        SpringSummer.new(year),
+        Summer.new(year),
+        Fall.new(year)
+      ].filter_map do |term|
+        term.text if term.in_range(@today)
+      end
     end
   end
 
@@ -129,7 +118,7 @@ class NewCurrentSchedule
   end
 end
 
-class NewCurrentSchedule
+class CurrentSchedule
   class Term
     FRIDAY_OFFSET = [5, 4, 3, 2, 1, 0, 6]
     def initialize(year)
@@ -168,6 +157,7 @@ class NewCurrentSchedule
       "W"
     end
 
+    # Second Firday in January to First Friday in April
     def term_range
       OpenStruct.new(start: friday_in_month(month: 1, week_number: 2), finish: friday_in_month(month: 4))
     end

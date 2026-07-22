@@ -9,11 +9,17 @@ require_relative "patron/student"
 require_relative "patron/ann_arbor_student"
 require_relative "patron/regional_student"
 require_relative "patron/skipped"
+require_relative "current_schedule"
 
 require_relative "patron/name"
 
 class Patron
   INST_ROLE_MAP = YAML.load_file("./config/umich_inst_roles_map.yaml")
+  CURRENT_SCHEDULE = CurrentSchedule.new
+
+  def self.current_schedule
+    CURRENT_SCHEDULE
+  end
 
   def self.inst_role_map
     INST_ROLE_MAP
@@ -81,7 +87,7 @@ class Patron
   def_delegators :@name, :first_name, :last_name, :middle_name, :middle_name?
   attr_reader :exclude_reasons
 
-  def initialize(data:, name: Name.new(data), current_schedule: CurrentSchedule.new)
+  def initialize(data:, name: Name.new(data), current_schedule: Patron.current_schedule)
     @data = data
     @name = name
     @current_schedule = current_schedule
